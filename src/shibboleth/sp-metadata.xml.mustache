@@ -1,0 +1,73 @@
+<md:EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" entityID="https://{{siteFqdn}}/shibboleth">
+
+
+  <md:SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+    <md:KeyDescriptor use="signing">
+      <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+        <ds:X509Data>
+          <ds:X509Certificate>MIIEAzCCAmugAwIBAgIJAOpbJCqoGFWqMA0GCSqGSIb3DQEBCwUAMB8xHTAbBgNV
+BAMTFGhvc3QxLmtsZWluaXRkZXYuY29tMB4XDTE5MDQyNTE4MTkwOFoXDTI5MDQy
+MjE4MTkwOFowHzEdMBsGA1UEAxMUaG9zdDEua2xlaW5pdGRldi5jb20wggGiMA0G
+CSqGSIb3DQEBAQUAA4IBjwAwggGKAoIBgQDGEemO7f/eqO1ZjNIy3lgPWQdL81R8
+lTNl+NCYQze/WlQqF+nv9d2nOsQB3l1Kurj1DON1yQcd4m/Khx55w49ecMcbh4It
+QigJ5/kNuQ3KSUlENy7wMiYDc6rzd38w6aHoP+3YsLVBlIuZmm4Fpc4kA0idF/lZ
+mSbFaRNZJQCotvZ1fmQbmlOCEtZ/E7+d13JlJCuXNOGCtqeCD9FaYenSmlL/7tqg
+zuWCclwwLzdF343IL2F1xjI/up07dSHKkbjBHWeJedKXZgnCQl+Fz+8Zbcw++kXv
+rr68B2tvGBGGLeBViKrYUiTg9cI/r0WX8E12rwmo1wmbUW7wocO3BHwO2Y74V2na
+d+aGsB2blhl8+NpgUgkROofV+YFXVa/GJAk9xQuVUGiyZVexv+i5IdIa1G/etn/+
+aztub003PQXiN7wDl/gXIV1QpDTNeXXfPH+iwLIPzWGGhCeoU/QivTf5LbNuuvku
+EJm4Wms654ZlK71jGYCku/BDgmqMwFKYmH8CAwEAAaNCMEAwHwYDVR0RBBgwFoIU
+aG9zdDEua2xlaW5pdGRldi5jb20wHQYDVR0OBBYEFP3sC9Dv5JlNi7jvtvu6yLc0
+ySuIMA0GCSqGSIb3DQEBCwUAA4IBgQC4m6QF5IVzrBnttjvgNPIc00MU9DbQZ+a4
+0WYipnd1udVGHA5nBmVACuJ9SOlek1Khs6lD9PGCoG+qjcqSyb30lF6pIEDYGvSg
+Q1gbGzkZQtJKbuiWV5iLwY94OmCbly4Wz07OqWqyE+SL617n1ztM/Gd/KuJ57mHd
+3LiiawPjchKggyzDLdtBMdFAA/yk3McVfPQjQrS9B8cOR63rivtJxzdZieyMgyHp
+uILmHpB5MQ3f7hgInXtujKHeAE27kpvcF8Vkgjc7EBT8PoB9AyPTHYrwAFTOwYvR
+DdUreCtHv0If1htiBAc80QLwanFRzsfUSpzB/qftqviN9IOPLZziNLXo8JR4P0C/
+EsxptAUNKyxxfOoRi13seU6tRE1Of2OrKmLAKDG3/VssOXe4VxI8AtHvcozD5/7K
+5BVsYRJEZC6vuolO/8MbFjVRhK8p88hQ/CoyYly5l9AMJHD7c+8SQINJQi7saJ8x
+Gixf0HcwrzpfiaMJ7aIJds8/o4XsET8=
+</ds:X509Certificate>
+        </ds:X509Data>
+      </ds:KeyInfo>
+    </md:KeyDescriptor>
+    <md:KeyDescriptor use="encryption">
+      <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+        <ds:X509Data>
+          <ds:X509Certificate>MIIEAzCCAmugAwIBAgIJANCPsROn/otIMA0GCSqGSIb3DQEBCwUAMB8xHTAbBgNV
+BAMTFGhvc3QxLmtsZWluaXRkZXYuY29tMB4XDTE5MDQyNTE4MTkwOFoXDTI5MDQy
+MjE4MTkwOFowHzEdMBsGA1UEAxMUaG9zdDEua2xlaW5pdGRldi5jb20wggGiMA0G
+CSqGSIb3DQEBAQUAA4IBjwAwggGKAoIBgQC709KVqsjvMiW5P1C7uHEM/29aw0fc
+x8+59HIwSWJxR1+gkQkC7MT5/qeYOBDOmFE4N+GtfAhkXV1/ZhQVVsGbScY0AW59
+WrdODwilPTE8MQhmumwfEJeXSZSHWR18aJkV4hOgwWHKFCmmM2OvJkWv8OVtVwwl
+TXlXKQa2W5AjLYDbj/+fd2SFoz9ErqI3ZgXc02W7NfHoCnq065O5Sw/57xJIO3WO
+bloWKgPoq44Tz1s3R3Dj14e+SY2GhNKqH4+tgNLNgzs8JjO7iEHb3UkEqYDeYGEA
+HImQBWAUt1JfTizDL68z0KrT10yU+J8nusucJgdAMsMv5+6w7IOiYo/ctGuiIb5k
+B8Ly7M5Gvgm8M3OzzCfneLilh8pgnMNHd+xIOak2RJGDkgIFCYgn/B22NjXGh1eS
+O87rblv5zhRpYLIDUSw1+n94depWkpdtsIx1LO/QC5woK2B8EaeuCHFmkANG0I3T
+t/c8Q7QcMfyPWWFxSFmx09MIxtT2TJ0o8ysCAwEAAaNCMEAwHwYDVR0RBBgwFoIU
+aG9zdDEua2xlaW5pdGRldi5jb20wHQYDVR0OBBYEFA9GcjL3FbVcY9x2Bir5ZeLB
+mhbuMA0GCSqGSIb3DQEBCwUAA4IBgQAI+o3HFwrPrC6yv+O4SSjG5xznx8docCMw
+h5KyW2EI5JogVFTqlrk8colH8ccKC525A3gnWcHBFrSgvsW/z+7h/P+CcqE4G/DG
+K9ZEfgUSTiOSRiABpeZSd3zAgKseF8rZRAbyezR1nczZajkI6/k1GE+rtui5wh2O
+cpRdU6bBbbcKG8vuyNU5d5cjMj+334GiA+B+vsgoS1aTYlhie1AwrwmFOpgqNT0u
+yYjsoHr2cJQNpOqlZXdlmeeshX6SWNSrnuS9q96VttHcWa+MrQ1PRxEOQdwVvUA5
+n4zsRqc/d1U8CC8XgpP3RvtyNtzsHHt7aEgRjRCS+xXoHglX8pmg3L+W/mJRASPP
+OQxHI3XGTzcPJXLyHcgTKhKjtBk8NFb0Jkjk4SuWOzcDVVjqLX5A4yYmnqjegsxc
+/Kh5A+4zoblI6Ifvp6OXeDa1xUVNsSUO189ly+oSGyEnHdYuqHZfUm2gRNGIusBO
+rbAV7r1OSW1YDyyt38WhuOBvhAg6N5E=
+          </ds:X509Certificate>
+        </ds:X509Data>
+      </ds:KeyInfo>
+    </md:KeyDescriptor>
+
+    <md:AssertionConsumerService Location="https://{{siteFqdn}}/Shibboleth.sso/SAML2/POST" index="1"
+      Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"/>
+    <md:AssertionConsumerService Location="https://{{siteFqdn}}/Shibboleth.sso/SAML2/POST-SimpleSign" index="2"
+      Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST-SimpleSign"/>
+    <md:AssertionConsumerService Location="https://{{siteFqdn}}/Shibboleth.sso/SAML2/ECP" index="3"
+      Binding="urn:oasis:names:tc:SAML:2.0:bindings:PAOS"/>
+
+  </md:SPSSODescriptor>
+
+</md:EntityDescriptor>
