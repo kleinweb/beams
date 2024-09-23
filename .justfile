@@ -5,7 +5,10 @@
 
 import '.config/vars.just'
 
-mod release'.config/release'
+[group: "release"]
+mod release '.config/release'
+
+[group: "licensing"]
 mod reuse '.config/reuse'
 
 # Display a list of available tasks as the default command
