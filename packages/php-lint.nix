@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: 2024 Temple University <kleinweb@temple.edu>
-#
-# SPDX-License-Identifier: GPL-3.0-or-later
-
 { lib, ... }:
 {
   perSystem =
@@ -28,7 +24,7 @@
         runtimeInputs = [ pkgs.php ];
         text = ''
           ${lib.getExe pkgs.php.packages.php-parallel-lint} \
-            --exclude .git --exclude .cache --exclude .direnv \
+            --exclude .git --exclude .cache --exclude .data --exclude .direnv \
             --exclude vendor --exclude node_modules \
             "$@"
         '';

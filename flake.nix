@@ -3,13 +3,12 @@
 {
   description = "Beams";
   inputs = {
-    nixpkgs.follows = "nixos-unstable";
+    flake-parts.url = "github:hercules-ci/flake-parts";
+    pre-commit-hooks.url = "github:cachix/pre-commit-hooks.nix";
+
     nixos-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixpkgs-trunk.url = "github:NixOS/nixpkgs/master";
-
-    flake-parts.url = "github:hercules-ci/flake-parts";
-
-    pre-commit-hooks.url = "github:cachix/pre-commit-hooks.nix";
+    nixpkgs.follows = "nixos-unstable";
   };
 
   outputs =
@@ -23,9 +22,11 @@
 
       imports = [
         inputs.pre-commit-hooks.flakeModule
+
+        ./packages
+
         ./nix/devshells.nix
         ./nix/git-hooks.nix
-        ./nix/php-lint.nix
       ];
 
       perSystem =
@@ -37,7 +38,6 @@
               (_final: prev: {
                 just = inputs'.nixpkgs-trunk.legacyPackages.just;
                 nixfmt = prev.nixfmt-rfc-style;
-                php = prev.php82;
                 treefmt = prev.treefmt2;
               })
             ];
