@@ -6,16 +6,16 @@
 
 php.buildComposerProject (finalAttrs: {
   pname = "php-stubs-generator";
-  version = "0.8.4";
+  version = "0.8.5";
 
   src = fetchFromGitHub {
     owner = "php-stubs";
     repo = "generator";
     rev = "v${finalAttrs.version}";
-    hash = "sha256-rJRl9SOldVD7OrDFVZkbHlTcqLok6n2zTH6wdJeoU+M=";
+    hash = "sha256-eKvAeM3B3u5EeeOpuHpuW79VTreq4YQiP4mXYb7NMTQ=";
   };
 
-  vendorHash = "sha256-N12FkmKtIw/IXsMXUcf1ql4TlLg/OScmfKgvJpuHF+Q=";
+  vendorHash = "sha256-531ncqpfv1ertcgWeVf7zJfv2HDiKeKpMzOBLbRikOU=";
 
   composerLock = ./composer.lock;
 
