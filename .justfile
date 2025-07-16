@@ -1,44 +1,41 @@
-# SPDX-FileCopyrightText: 2022-2024 Temple University <kleinweb@temple.edu>
+# SPDX-FileCopyrightText: 2022-2025 Temple University <kleinweb@temple.edu>
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 ###: <https://just.systems/man/en/>
 
 import '.config/vars.just'
 
-[group: "release"]
 mod release '.config/release'
-
-[group: "licensing"]
 mod reuse '.config/reuse'
 
 # Display a list of available tasks as the default command
 default:
-  @just --choose
+    @just --choose
 
-[group: "qa"]
-[doc: "Check for any lint or formatting issues on project files"]
+[doc("Check for any lint or formatting issues on project files")]
+[group("qa")]
 check:
-  dotenv-linter check
-  biome check {{prj-root}}
-  nix run '{{prj-root}}#php-lint-project'
-  composer php-cs-fixer -- check
-  composer phpcs
-  composer phpstan
+    dotenv-linter check
+    biome check {{ prj-root }}
+    nix run '{{ prj-root }}#php-lint-project'
+    composer php-cs-fixer -- check
+    composer phpcs
+    composer phpstan
 
-[group: "qa"]
-[doc: "Check for (non-stylistic) linting issues on project files"]
+[doc("Check for (non-stylistic) linting issues on project files")]
+[group("qa")]
 lint:
-  biome lint {{prj-root}}
-  nix run '{{prj-root}}#php-lint-project'
-  composer lint
+    biome lint {{ prj-root }}
+    nix run '{{ prj-root }}#php-lint-project'
+    composer lint
 
-[group: "qa"]
-[doc: "Write *all* formatter+fixer changes to project files"]
+[doc("Write *all* formatter+fixer changes to project files")]
+[group("qa")]
 fix:
-  treefmt
-  composer fix
+    treefmt
+    composer fix
 
-[group: "qa"]
-[doc: "Write _safe_ formatter changes to project files"]
+[doc("Write _safe_ formatter changes to project files")]
+[group("qa")]
 fmt:
-  treefmt
+    treefmt

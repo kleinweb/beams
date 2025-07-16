@@ -36,6 +36,11 @@ options = ["--keepdate"]
 includes = ["*"]
 excludes = []
 
+[formatter.just]
+command = "just"
+options = ["--fmt", "--unstable"]
+includes = [".justfile"]
+
 [formatter.nixfmt]
 command = "nixfmt"
 options = []
