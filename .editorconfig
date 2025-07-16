@@ -29,6 +29,10 @@ switch_case_indent = true
 indent_size = 4
 indent_style = space
 
+[{Justfile,justfile,.justfile,*.{just}}]
+indent_size = 4
+indent_style = space
+
 # Distributable configuration files
 # e.g. phpcs.xml.dist, phpstan.neon.dist
 [*.{neon,xml}.dist]
