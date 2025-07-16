@@ -9,6 +9,8 @@
         ddev = pkgs.callPackage ./ddev.nix { };
 
         php-stubs-generator = pkgs.callPackage ./php-stubs-generator/package.nix { };
+
+        shib-keygen = pkgs.callPackage ./shib-keygen/package.nix { };
       };
     };
 }
