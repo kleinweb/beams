@@ -38,7 +38,6 @@
               (_final: prev: {
                 just = inputs'.nixpkgs-trunk.legacyPackages.just;
                 nixfmt = prev.nixfmt-rfc-style;
-                treefmt = prev.treefmt2;
               })
             ];
           };
