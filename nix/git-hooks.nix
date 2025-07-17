@@ -35,6 +35,10 @@
             # Other PHP linters will likely fail when there are syntax errors.
             fail_fast = true;
           };
+          reuse = {
+            enable = true;
+            stages = [ "pre-push" ];
+          };
           treefmt.enable = true;
           yamllint.enable = true;
         };

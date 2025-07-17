@@ -1,16 +1,15 @@
-# SPDX-FileCopyrightText: (C) 2024 Temple University <kleinweb@temple.edu>
-# SPDX-FileCopyrightText: 2024 Temple University <kleinweb@temple.edu>
+# SPDX-FileCopyrightText: (C) 2022-2025 Temple University <kleinweb@temple.edu>
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import '../vars.just'
 
-gpl30Plus := 'GPL-3.0-or-later'
+gpl3 := 'GPL-3.0-or-later'
 mit := 'MIT'
 and := ' AND '
 
 alias public-domain := cc0
 
-default:
+lint:
   reuse lint
 
 [private]
@@ -23,16 +22,26 @@ annotate license +ARGS:
     --merge-copyrights \
     {{ARGS}}
 
+[doc: "Annotate all unlicensed files"]
+[no-cd]
+annotate-missing task:
+  reuse lint --json \
+  | jq -r '.non_compliant.missing_licensing_info.[]' \
+  | xargs -n1 -I{} just reuse::{{task}} {{prj-root}}/{}
+
 [doc: "Annotate all plaintext note files with the documentation license"]
 docs:
   fd --glob '**/*.{md,mdx,markdown,org}' -X \
     just commons {}
 
 [doc: "License the specified files as GPL-3.0-or-later"]
-gpl +FILES: (annotate gpl30Plus FILES)
+gpl +FILES: (annotate gpl3 FILES)
 
-[doc: "Dual-license the specified files as GPL+MIT"]
-dual colicensor +FILES: (annotate (gpl30Plus + and + mit) ('-c ' + quote(colicensor) + ' ' + FILES))
+[doc: "Add a co-licensor to the specified files"]
+colicense license colicensor +FILES: (annotate (license) ('-c ' + quote(colicensor) + ' ' + FILES))
+
+[doc: "License the specified files under an additional license"]
+dual-license other-license +FILES: (annotate (gpl3 + and + other-license) FILES)
 
 [doc: "License the specified files as non-commercial docs (CC-BY-NC-SA-4.0)"]
 commons +FILES: (annotate 'CC-BY-NC-SA-4.0' FILES)
