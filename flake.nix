@@ -30,17 +30,9 @@
       ];
 
       perSystem =
-        { inputs', system, ... }:
+        { pkgs, ... }:
         {
-          _module.args.pkgs = import inputs.nixpkgs {
-            inherit system;
-            overlays = [
-              (_final: prev: {
-                just = inputs'.nixpkgs-trunk.legacyPackages.just;
-                nixfmt = prev.nixfmt-rfc-style;
-              })
-            ];
-          };
+          formatter = pkgs.nixfmt-rfc-style;
         };
     };
 
