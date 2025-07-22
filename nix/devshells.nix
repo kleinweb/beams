@@ -1,5 +1,4 @@
-# SPDX-FileCopyrightText: 2024 Temple University <kleinweb@temple.edu>
-#
+# SPDX-FileCopyrightText: 2025 Temple University <kleinweb@temple.edu>
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 {
@@ -17,7 +16,7 @@
         pkgs.fd
         pkgs.gnused
         pkgs.jq
-        pkgs.just
+        inputs'.nixpkgs-trunk.legacyPackages.just
         pkgs.moreutils # provides `sponge`
         pkgs.ripgrep
         pkgs.nodejs
@@ -33,15 +32,15 @@
           ${config.pre-commit.installationScript}
         '';
         nativeBuildInputs = commonPkgs ++ [
+          config.formatter
           config.pre-commit.settings.hooks.markdownlint.package
           config.pre-commit.settings.hooks.yamllint.package
 
           pkgs.dos2unix
           pkgs.cocogitto
-          pkgs.nixfmt # pkgs.nixfmt-rfc-style via overlay
           pkgs.nodePackages.prettier
           pkgs.taplo
-          pkgs.treefmt # pkgs.treefmt2 via overlay
+          pkgs.treefmt
 
           # pre-commit helper tool to simplify file matching.  For example,
           # the `yml` and `yaml` extensions share the same "type" of `yaml`.
