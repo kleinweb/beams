@@ -7,9 +7,10 @@ gpl3 := 'GPL-3.0-or-later'
 mit := 'MIT'
 and := ' AND '
 
+alias lint := check
 alias public-domain := cc0
 
-lint:
+check:
   reuse lint
 
 [private]
@@ -24,10 +25,10 @@ annotate license +ARGS:
 
 [doc: "Annotate all unlicensed files"]
 [no-cd]
-annotate-missing task:
+annotate-missing license="gpl":
   reuse lint --json \
   | jq -r '.non_compliant.missing_licensing_info.[]' \
-  | xargs -n1 -I{} just reuse::{{task}} {{prj-root}}/{}
+  | xargs -n1 -I{} just reuse::{{license}} {{prj-root}}/{}
 
 [doc: "Annotate all plaintext note files with the documentation license"]
 docs:

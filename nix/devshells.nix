@@ -18,6 +18,7 @@
         pkgs.jq
         inputs'.nixpkgs-trunk.legacyPackages.just
         pkgs.moreutils # provides `sponge`
+        pkgs.reuse
         pkgs.ripgrep
         pkgs.nodejs
       ];
