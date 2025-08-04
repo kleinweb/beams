@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [1.1.1](https://github.com/kleinweb/beams/compare/eca66ae5b498dae3d2682802dcfad7dd660654b7..1.1.1) - 2025-08-04
+#### Bug Fixes
+- **(release)** recipes must not cd - ([eca66ae](https://github.com/kleinweb/beams/commit/eca66ae5b498dae3d2682802dcfad7dd660654b7)) - [@montchr](https://github.com/montchr)
+
+- - -
+
 ## [1.0.0](https://github.com/kleinweb/beams/compare/1.0.0-rc.1..1.0.0) - 2025-08-04
 #### Bug Fixes
 - **(meta)** remove non-compliant `just` formatter - ([30c83bf](https://github.com/kleinweb/beams/commit/30c83bf6edd5d4604cfc8ee2d6a50133bfee6b08)) - [@montchr](https://github.com/montchr)
