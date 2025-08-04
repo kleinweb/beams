@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## [1.1.2](https://github.com/kleinweb/beams/compare/672828673b5bfa710f45eae3c06061415a39a456..1.1.2) - 2025-08-04
+#### Bug Fixes
+- **(release)** specify git remote and branch in post-bump hook - ([6728286](https://github.com/kleinweb/beams/commit/672828673b5bfa710f45eae3c06061415a39a456)) - [@montchr](https://github.com/montchr)
+
+- - -
+
 ## [1.1.1](https://github.com/kleinweb/beams/compare/eca66ae5b498dae3d2682802dcfad7dd660654b7..1.1.1) - 2025-08-04
 #### Bug Fixes
 - **(release)** recipes must not cd - ([eca66ae](https://github.com/kleinweb/beams/commit/eca66ae5b498dae3d2682802dcfad7dd660654b7)) - [@montchr](https://github.com/montchr)
