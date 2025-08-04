@@ -1,0 +1,58 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-action.json
+---
+name: Setup Nix
+
+inputs:
+  devshell_name:
+    description: 'Name of the devshell flake output to use for CI tasks.'
+    default: 'ci'
+  cachix_auth_token:
+    description: 'Cachix authentication token for cache writes.'
+  github_token:
+    description: 'GitHub API token to prevent rate limiting.'
+
+runs:
+  using: composite
+  steps:
+
+    - name: Install Nix
+      uses: nixbuild/nix-quick-install-action@v30
+      with:
+        nix_conf: |
+          access-tokens = github.com=${{ inputs.github_token }}
+          keep-env-derivations = true
+          keep-outputs = true
+
+    - name: Set up Nix store cache
+      uses: nix-community/cache-nix-action@v6
+      env:
+        cache-name: nix-cache
+      with:
+        # yamllint disable-line rule:line-length
+        primary-key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/*.nix', '**/flake.lock') }}
+        # If there's no cache hit, restore a cache by this prefix.
+        restore-prefixes-first-match: ${{ runner.os }}-build-${{ env.cache-name }}-
+        gc-max-store-size-linux: 1G
+        purge: true
+        # Purge all versions of the cache
+        purge-prefixes: ${{ runner.os }}-build-${{ env.cache-name }}-
+        # ...Created more than this number of seconds ago:
+        purge-created: 0
+        # ...OR last accessed more than this number of seconds ago
+        # relative to the start of the "Post Restore and save Nix
+        # store" phase:
+        purge-last-accessed: 0
+        # ...AND NOT any version matching `primary-key`
+        purge-primary-key: never
+
+    - name: Setup binary cache
+      uses: cachix/cachix-action@v15
+      with:
+        name: kleinweb
+        extraPullNames: dotfield,nix-community
+        authToken: ${{ inputs.cachix_auth_token }}
+
+    - name: 'Initialize CI devshell'
+      uses: nicknovitski/nix-develop@v1
+      with:
+        arguments: '#${{ inputs.devshell }}'

@@ -1,0 +1,63 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-action.json
+---
+name: Setup PHP
+description: 'Setup and install Composer dependencies'
+
+inputs:
+  auth_json:
+    description: "JSON string to save as `auth.json` for HTTP Basic Auth"
+  development:
+    description: "Whether to install development dependencies"
+    default: true
+  github_token:
+    description: "GitHub token"
+  extra_args:
+    description: 'Additional arguments passed to `composer install`.'
+  override_args:
+    description: "Override the arguments passed to `composer install`."
+  working_directory:
+    description: 'Working directory containing a `composer.json` and `composer.lock`.'
+    default: '.'
+
+runs:
+  using: composite
+  steps:
+
+    - name: 'Get Composer cache directory'
+      id: composer-cache-dir
+      shell: bash
+      run: |
+        echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+    - name: 'Prepare Composer dependency cache'
+      id: composer-prepare-cache
+      uses: actions/cache@v4
+      env:
+        cache-name: composer-cache
+      with:
+        path: ${{ steps.composer-cache-dir.outputs.dir }}
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-build-${{ env.cache-name }}-
+          ${{ runner.os }}-build-
+          ${{ runner.os }}-
+
+    - name: 'Configure GitHub auth for Composer'
+      if: ${{ inputs.github_token }}
+      working-directory: ${{ inputs.working_directory }}
+      shell: bash
+      run: composer config github-oauth.github.com ${{ inputs.github_token }}
+
+    - name: 'Write Composer auth.json file for HTTP Basic Auth credentials'
+      if: ${{ inputs.auth_json }}
+      shell: bash
+      run: echo '${{ inputs.auth_json }}' > $GITHUB_WORKSPACE/auth.json
+
+    - name: 'Install Composer dependencies'
+      working-directory: ${{ inputs.working_directory }}
+      env:
+        COMPOSER_INSTALL_DEVELOPMENT: ${{ inputs.development }}
+        COMPOSER_INSTALL_EXTRA_ARGS: ${{ inputs.extra_args }}
+        COMPOSER_INSTALL_OVERRIDE_ARGS: ${{ inputs.override_args }}
+      run: ${{ github.action_path }}/composer-install.sh
+      shell: bash
