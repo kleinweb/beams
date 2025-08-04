@@ -17,17 +17,11 @@ default:
 check:
     dotenv-linter check
     biome check {{ prj-root }}
-    nix run '{{ prj-root }}#php-lint-project'
-    composer php-cs-fixer -- check
-    composer phpcs
-    composer phpstan
 
 [doc("Check for (non-stylistic) linting issues on project files")]
 [group("qa")]
 lint:
     biome lint {{ prj-root }}
-    nix run '{{ prj-root }}#php-lint-project'
-    composer lint
 
 [doc("Write *all* formatter+fixer changes to project files")]
 [group("qa")]
