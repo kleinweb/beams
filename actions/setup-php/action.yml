@@ -1,0 +1,65 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-action.json
+---
+name: Setup PHP
+description: 'Setup and install Composer dependencies'
+
+inputs:
+  extra_install_args:
+    description: 'Additional arguments to pass to `composer install`.'
+  working_directory:
+    description: 'Working directory containing a `composer.json` and `composer.lock`.'
+    default: '.'
+
+runs:
+  using: composite
+  steps:
+    - name: 'Get Composer cache directory'
+      id: composer-cache
+      working-directory: ${{ inputs.working_directory }}
+      run: |
+        COMPOSER_CACHE_DIR="$(composer config cache-files-dir)"
+        echo "dir=$COMPOSER_CACHE_DIR" >> $GITHUB_OUTPUT
+      shell: bash
+
+    - name: 'Prepare Composer dependency cache'
+      uses: actions/cache@v3
+      working-directory: ${{ inputs.working_directory }}
+      with:
+        path: ${{ steps.composer-cache.outputs.dir }}
+        key: ${{ runner.os }}-composer-${{ hashFiles('composer.lock') }}
+        restore-keys: ${{ runner.os }}-composer-
+
+    - name: 'Install Composer dependencies'
+      working-directory: ${{ inputs.working_directory }}
+      run: composer install --no-progress ${{ inputs.extra_install_args }}
+      shell: bash
+
+# ========================================================================
+
+    - name: 'Get Composer cache directory'
+      id: composer-cache-dir
+      shell: bash
+      run: |
+        echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+    - name: 'Prepare Composer dependency cache'
+      id: composer-prepare-cache
+      uses: actions/cache@v4
+      env:
+        cache-name: composer-cache
+      with:
+        path: ${{ steps.composer-cache-dir.outputs.dir }}
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-build-${{ env.cache-name }}-
+          ${{ runner.os }}-build-
+          ${{ runner.os }}-
+
+    - name: 'Configure GitHub auth for Composer'
+      working-directory: ${{ inputs.working_directory }}
+      shell: bash
+      run: composer config github-oauth.github.com ${{ secrets.GITHUB_TOKEN }}
+
+    - name: 'Load Composer auth.json from secrets'
+      shell: bash
+      run: echo '${{ secrets.COMPOSER_AUTH_JSON }}' > $GITHUB_WORKSPACE/auth.json
