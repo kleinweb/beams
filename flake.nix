@@ -21,6 +21,7 @@
       ];
 
       imports = [
+        inputs.flake-parts.flakeModules.modules
         inputs.pre-commit-hooks.flakeModule
 
         ./packages
