@@ -4,11 +4,7 @@
   description = "Beams";
   inputs = {
     flake-parts.url = "github:hercules-ci/flake-parts";
-    pre-commit-hooks.url = "github:cachix/pre-commit-hooks.nix";
-
-    nixos-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
-    nixpkgs-trunk.url = "github:NixOS/nixpkgs/master";
-    nixpkgs.follows = "nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
   };
 
   outputs =
@@ -22,12 +18,9 @@
 
       imports = [
         inputs.flake-parts.flakeModules.modules
-        inputs.pre-commit-hooks.flakeModule
+        inputs.flake-parts.flakeModules.partitions
 
         ./packages
-
-        ./nix/devshells.nix
-        ./nix/git-hooks.nix
       ];
 
       perSystem =
@@ -35,6 +28,24 @@
         {
           formatter = pkgs.nixfmt-rfc-style;
         };
+
+      partitions.dev = {
+        extraInputsFlake = ./.config;
+        module =
+          { inputs, ... }:
+          {
+            imports = [
+              inputs.pre-commit-hooks.flakeModule
+              ./.config/devshells
+              ./.config/git-hooks
+            ];
+          };
+      };
+
+      partitionedAttrs = {
+        checks = "dev";
+        devShells = "dev";
+      };
     };
 
   nixConfig = {
