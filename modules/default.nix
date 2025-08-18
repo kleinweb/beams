@@ -20,7 +20,7 @@
       kleinweb-dev__hosts-entries = ./kleinweb/dev/hosts-entries/module.nix;
     };
 
-    home = {
+    homeManager = {
       default = {
         imports = [
           ./kleinweb/dev/module.nix
