@@ -1,6 +1,6 @@
 { config, lib, ... }:
 let
-  cfg = config.kleinweb.hostsEntries;
+  cfg = config.kleinweb.dev.hostsEntries;
 in
 {
   options = {
