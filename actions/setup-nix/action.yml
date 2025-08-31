@@ -16,7 +16,7 @@ runs:
   steps:
 
     - name: Install Nix
-      uses: nixbuild/nix-quick-install-action@v30
+      uses: nixbuild/nix-quick-install-action@v33
       with:
         nix_conf: |
           access-tokens = github.com=${{ inputs.github_token }}
