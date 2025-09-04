@@ -1,0 +1,36 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-action.json
+---
+name: Setup Node.js
+description: 'Setup and install Node.js dependencies'
+
+runs:
+  using: composite
+  steps:
+    - name: 'Get npm cache directory'
+      id: npm-cache-dir
+      shell: bash
+      run: |
+        echo "dir=$(npm config get cache)" >> $GITHUB_OUTPUT
+
+    - name: 'Prepare npm dependency cache'
+      id: npm-prepare-cache
+      uses: actions/cache@v4
+      env:
+        cache-name: npm-cache
+      with:
+        path: ${{ steps.npm-cache-dir.outputs.dir }}
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-build-${{ env.cache-name }}-
+          ${{ runner.os }}-build-
+          ${{ runner.os }}-
+
+    - if: ${{ steps.npm-prepare-cache.outputs.cache-hit != 'true' }}
+      name: List the state of npm dependencies
+      continue-on-error: true
+      shell: bash
+      run: npm list
+
+    - name: 'Install npm dependencies'
+      shell: bash
+      run: npm ci
