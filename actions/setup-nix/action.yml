@@ -46,7 +46,7 @@ runs:
         purge-primary-key: never
 
     - name: Setup binary cache
-      uses: cachix/cachix-action@v15
+      uses: cachix/cachix-action@v16
       with:
         name: kleinweb
         extraPullNames: dotfield,nix-community
