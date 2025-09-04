@@ -47,3 +47,9 @@ runs:
       run: echo "user-id=$(gh api "/users/${{ steps.app-token.outputs.app-slug }}[bot]" --jq .id)" >> "$GITHUB_OUTPUT"
       env:
         GH_TOKEN: ${{ steps.app-token.outputs.token }}
+
+    - name: "Configure Git user with app credentials"
+      shell: bash
+      run: |
+        git config --global user.name '${{ inputs.user_name }}'
+        git config --global user.email '${{ inputs.user_email }}'
