@@ -7,10 +7,10 @@ name: Setup Kleinops GitHub App
 description: "Initialize the organization operations GitHub app"
 
 inputs:
-  app_id:
+  app-id:
     required: true
     description: "GitHub app ID"
-  private_key:
+  private-key:
     required: true
     description: 'GitHub app private key'
 
