@@ -18,4 +18,5 @@ if [[ -z "$COMPOSER_INSTALL_OVERRIDE_ARGS" ]]; then
   fi
 fi
 
-composer install "$COMPOSER_ARGS"
+# shellcheck disable=SC2086
+composer install $COMPOSER_ARGS
