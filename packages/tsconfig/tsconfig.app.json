@@ -1,0 +1,17 @@
+{
+  "extends": ["./tsconfig.base.json", "./tsconfig.web.json"],
+  "compilerOptions": {
+    "include": ["resources", "src"],
+    "exclude": [
+      "node_modules",
+      "**/dist/**",
+      "**/public/build/**",
+      "**/vendor/**",
+      "**/*.min.*"
+    ],
+    "typeRoots": ["./types", "./node_modules/@types"],
+    "jsx": "preserve",
+    "noEmit": true,
+    "erasableSyntaxOnly": true
+  }
+}

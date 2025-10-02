@@ -1,0 +1,11 @@
+{
+  "extends": ["./tsconfig.base.json", "./tsconfig.web.json"],
+  "compilerOptions": {
+    "useDefineForClassFields": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "noEmit": true
+  }
+}
