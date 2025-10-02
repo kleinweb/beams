@@ -1,5 +1,5 @@
 {
-  "name": "@kleinweb/seesaw",
+  "name": "@kleinweb/beams",
   "private": true,
   "scripts": {
     "dev": "turbo run dev",
