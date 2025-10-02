@@ -28,4 +28,5 @@ vendor
 wp-cli.local.yml
 
 # Build artifacts
+.turbo
 result

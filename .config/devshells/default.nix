@@ -20,6 +20,7 @@
         pkgs.moreutils # provides `sponge`
         pkgs.reuse
         pkgs.ripgrep
+        pkgs.turbo
         pkgs.nodejs
       ];
     in

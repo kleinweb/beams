@@ -1,0 +1,29 @@
+{
+  "name": "@kleinweb/seesaw",
+  "private": true,
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kleinweb/beams.git"
+  },
+  "author": "Klein College of Media and Communication <kleinweb@temple.edu>",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/kleinweb/beams/issues"
+  },
+  "homepage": "https://github.com/kleinweb/beams#readme",
+  "description": "",
+  "packageManager": "npm@10.9.2",
+  "devDependencies": {
+    "@types/node": "^22.7.5",
+    "turbo": "latest",
+    "typescript": "^5.9.3"
+  },
+  "workspaces": [
+    "packages/*"
+  ]
+}
