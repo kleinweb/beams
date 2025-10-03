@@ -7,6 +7,9 @@
   "exports": {
     ".": "./dist/"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "devDependencies": {
     "@kleinweb/tsconfig": "*",
     "typescript": "^5.8.3"
