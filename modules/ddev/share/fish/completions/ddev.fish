@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: (C) 2025 Temple University <kleinweb@temple.edu>
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 # fish completion for ddev                                 -*- shell-script -*-
 
 function __ddev_debug

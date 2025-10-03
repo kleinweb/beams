@@ -5,19 +5,19 @@ description: 'Setup and install Composer dependencies'
 
 inputs:
   auth_json:
-    description: "JSON string to save as `auth.json` for HTTP Basic Auth"
+    description: 'JSON string to save as `auth.json` for HTTP Basic Auth'
     default: ''
   development:
-    description: "Whether to install development dependencies"
+    description: 'Whether to install development dependencies'
     default: true
   github_token:
-    description: "GitHub token"
+    description: 'GitHub token'
     default: ''
   extra_args:
     description: 'Additional arguments passed to `composer install`.'
     default: ''
   override_args:
-    description: "Override the arguments passed to `composer install`."
+    description: 'Override the arguments passed to `composer install`.'
     default: ''
   working_directory:
     description: 'Working directory containing a `composer.json` and `composer.lock`.'
@@ -26,7 +26,6 @@ inputs:
 runs:
   using: composite
   steps:
-
     - name: 'Get Composer cache directory'
       id: composer-cache-dir
       shell: bash

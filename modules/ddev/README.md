@@ -17,5 +17,5 @@ security.pki.certificates = [
 ];
 ```
 
-Like any X.509 keypair, the certificate is intended to be public.  The
+Like any X.509 keypair, the certificate is intended to be public. The
 private key must never leave your system.

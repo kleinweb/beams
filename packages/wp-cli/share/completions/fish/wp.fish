@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: (C) 2025 Temple University <kleinweb@temple.edu>
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 # https://github.com/wp-cli/wp-cli/blob/349cf0c4ff3135a063184b49a9a6f85654b50c45/utils/wp.fish
 function __wp_cli_complete
     # Get current buffer and cursor

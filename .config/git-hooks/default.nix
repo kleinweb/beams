@@ -37,7 +37,6 @@
           };
           reuse = {
             enable = true;
-            stages = [ "pre-push" ];
           };
           treefmt = {
             enable = true;
