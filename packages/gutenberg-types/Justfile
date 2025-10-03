@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2025 Temple University <kleinweb@temple.edu>
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 src-version := '21.8.0-rc.1'
 
 cache-dir := justfile_directory() / ".cache"
