@@ -1,0 +1,14 @@
+{
+  "name": "@kleinweb/gutenberg-types",
+  "version": "21.7.0",
+  "license": "GPL-3.0-or-later",
+  "type": "module",
+  "types": "src/types.d.ts",
+  "exports": {
+    ".": "./dist/"
+  },
+  "devDependencies": {
+    "@kleinweb/tsconfig": "*",
+    "typescript": "^5.8.3"
+  }
+}

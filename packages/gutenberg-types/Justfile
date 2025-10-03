@@ -1,0 +1,24 @@
+src-version := '21.8.0-rc.1'
+
+cache-dir := justfile_directory() / ".cache"
+output-dir := justfile_directory() / "src/types"
+
+release-url := 'https://github.com/WordPress/gutenberg/archive/refs/tags/v' + src-version + '.tar.gz'
+result-stem := 'gutenberg-' + src-version
+tarball-path := join(cache-dir, result-stem, '.tar.gz')
+result-path := cache-dir / result-stem
+schema-path := join(result-path, 'schemas/json')
+
+build: clean
+    mkdir -p {{ output-dir }}
+    json2ts -i {{ schema-path }} -o {{ output-dir }}
+
+update: update-src build
+
+update-src:
+    mkdir -p {{ parent_directory(tarball-path) }}
+    curl -L {{ release-url }} -o {{ tarball-path }}
+    tar xf {{ tarball-path }} --directory="{{ cache-dir }}"
+
+clean:
+    rm -rf {{ output-dir }}

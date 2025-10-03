@@ -32,7 +32,14 @@
       ];
 
       ciPkgs = commonPkgs ++ checksPkgs;
-      devPkgs = commonPkgs ++ checksPkgs ++ formatterPkgs ++ [ pkgs.cocogitto ];
+      devPkgs =
+        commonPkgs
+        ++ checksPkgs
+        ++ formatterPkgs
+        ++ [
+          pkgs.cocogitto
+          pkgs.json2ts
+        ];
 
     in
     {

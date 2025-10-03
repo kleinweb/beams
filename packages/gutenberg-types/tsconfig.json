@@ -1,0 +1,3 @@
+{
+  "extends": ["@kleinweb/tsconfig/tsconfig.recommended.json"]
+}

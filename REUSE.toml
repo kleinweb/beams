@@ -30,3 +30,11 @@ SPDX-License-Identifier = "CC-BY-NC-SA-4.0"
 path = ["packages/brand-assets/**"]
 SPDX-FileCopyrightText = "(C) 2024-2025 Temple University <kleinweb@temple.edu>"
 SPDX-License-Identifier = "LicenseRef-TU-Trademark-Policy"
+
+[[annotations]]
+path = ["packages/gutenberg-types/src/types/**"]
+SPDX-FileCopyrightText = [
+  "(C) 2025 Temple University <kleinweb@temple.edu>",
+  "(C) 2016-2025 The WordPress Contributors",
+]
+SPDX-License-Identifier = "GPL-3.0-or-later"
