@@ -1,7 +1,7 @@
 {
   "name": "@kleinweb/brand-assets",
   "license": "Proprietary",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "exports": {
     "./logos/*": "./src/logos/*"
   },
