@@ -1,5 +1,4 @@
 # SPDX-FileCopyrightText: 2024-2025 Temple University <kleinweb@temple.edu>
-#
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 [global]
@@ -14,6 +13,8 @@ options = [
   "--files-ignore-unknown=true",
 ]
 includes = [
+  "*.css",
+  "*.graphql",
   "*.js",
   "*.ts",
   "*.mjs",
@@ -28,7 +29,7 @@ includes = [
   "*.json",
   "*.jsonc",
 ]
-excludes = []
+excludes = [".changeset/**"]
 
 [formatter.dos2unix]
 command = "dos2unix"
@@ -45,7 +46,7 @@ excludes = []
 [formatter.prettier]
 command = "prettier"
 options = ["--write"]
-includes = ["*.css", "*.md", "*.mdx", "*.scss", "*.yaml", "*.yml"]
+includes = ["*.md", "*.mdx", "*.yaml", "*.yml"]
 excludes = ["CHANGELOG.md"]
 
 [formatter.taplo]

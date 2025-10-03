@@ -16,12 +16,7 @@ default:
 [group("qa")]
 check:
     dotenv-linter check
-    biome check {{ prj-root }}
-
-[doc("Check for (non-stylistic) linting issues on project files")]
-[group("qa")]
-lint:
-    biome lint {{ prj-root }}
+    nix flake check
 
 [doc("Write *all* formatter+fixer changes to project files")]
 [group("qa")]

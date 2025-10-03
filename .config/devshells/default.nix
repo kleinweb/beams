@@ -11,8 +11,6 @@
     }:
     let
       commonPkgs = [
-        pkgs.biome
-        pkgs.dotenv-linter
         pkgs.fd
         pkgs.gnused
         pkgs.jq
@@ -23,6 +21,19 @@
         pkgs.turbo
         pkgs.nodejs
       ];
+
+      checksPkgs = config.pre-commit.settings.enabledPackages ++ [
+        pkgs.biome
+        pkgs.dotenv-linter
+      ];
+
+      formatterPkgs = config.pre-commit.settings.hooks.treefmt.settings.formatters ++ [
+        pkgs.treefmt
+      ];
+
+      ciPkgs = commonPkgs ++ checksPkgs;
+      devPkgs = commonPkgs ++ checksPkgs ++ formatterPkgs ++ [ pkgs.cocogitto ];
+
     in
     {
       devShells.default = pkgs.mkShellNoCC {
@@ -33,27 +44,8 @@
 
           ${config.pre-commit.installationScript}
         '';
-        nativeBuildInputs = commonPkgs ++ [
-          config.formatter
-          config.pre-commit.settings.hooks.markdownlint.package
-          config.pre-commit.settings.hooks.yamllint.package
-
-          pkgs.dos2unix
-          pkgs.cocogitto
-          pkgs.nodePackages.prettier
-          pkgs.taplo
-          pkgs.treefmt
-
-          # pre-commit helper tool to simplify file matching.  For example,
-          # the `yml` and `yaml` extensions share the same "type" of `yaml`.
-          # Otherwise, you would need to write a regexp for both extensions.
-          # <https://pre-commit.com/#filtering-files-with-types>
-          # NOTE: The command is `identify-cli`, not to be confused with
-          # imagemagick's `identify`.
-          pkgs.python311Packages.identify
-        ];
+        nativeBuildInputs = devPkgs;
       };
-
-      devShells.ci = pkgs.mkShellNoCC { nativeBuildInputs = commonPkgs; };
+      devShells.ci = pkgs.mkShellNoCC { nativeBuildInputs = ciPkgs; };
     };
 }

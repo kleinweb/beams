@@ -16,11 +16,11 @@
               "file"
               "php"
             ];
-            stages = [ "pre-commit" ];
           };
           markdownlint.enable = true;
           markdownlint.excludes = [
             # Auto-generated
+            ".changeset/"
             "CHANGELOG.md"
           ];
           php-lint = {
@@ -39,7 +39,16 @@
             enable = true;
             stages = [ "pre-push" ];
           };
-          treefmt.enable = true;
+          treefmt = {
+            enable = true;
+            settings.formatters = [
+              config.formatter
+              pkgs.biome
+              pkgs.dos2unix
+              pkgs.prettier
+              pkgs.taplo
+            ];
+          };
           yamllint.enable = true;
         };
         default_stages = [
