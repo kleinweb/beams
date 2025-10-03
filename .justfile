@@ -12,9 +12,14 @@ mod reuse '.config/reuse'
 default:
     @just --choose
 
+push: check
+    git checkout main
+    git push origin main
+    git push codeberg main
+
 [doc("Check for any lint or formatting issues on project files")]
 [group("qa")]
-check:
+check: (reuse::check)
     dotenv-linter check
     nix flake check
 
