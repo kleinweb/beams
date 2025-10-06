@@ -1,0 +1,14 @@
+{
+  "$schema": "https://www.schemastore.org/tsconfig.json",
+  "extends": [
+    "@kleinweb/tsconfig/tsconfig.recommended.json",
+    "@kleinweb/tsconfig/tsconfig.node.json"
+  ],
+  "compilerOptions": {
+    "outDir": "dist",
+    "declaration": true,
+    "declarationMap": true,
+    "isolatedDeclarations": true
+  },
+  "include": ["src/**/*.ts"]
+}

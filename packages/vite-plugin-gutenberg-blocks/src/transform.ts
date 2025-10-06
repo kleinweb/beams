@@ -1,0 +1,73 @@
+// SPDX-FileCopyrightText: 2024-2025 Temple University <kleinweb@temple.edu>
+// SPDX-FileCopyrightText: 2023-2025 Evo Mark Ltd.
+// SPDX-License-Identifier: GPL-3.0-or-later OR MIT
+
+import type { EmittedAsset, PluginContext } from 'rollup'
+import { sep } from 'node:path'
+import { preprocessCSS } from 'vite'
+import type { ResolvedConfig } from 'vite'
+
+export interface WordpressBlockJson {
+  style: string | string[]
+  editorStyle?: string | string[]
+  viewStyle?: string | string[]
+  viewScript?: string | string[]
+  script?: string | string[]
+}
+
+function trimSlashes(filename: string): string {
+  return filename.replace(/^[/\\]+|[/\\]+$/g, '')
+}
+function wrapArray<T>(maybeArray: T | T[]): T[] {
+  return Array.isArray(maybeArray) ? maybeArray : [maybeArray]
+}
+
+/**
+ * transform
+ *
+ * Catches any CSS files imported into the block, normalises their filepath and then emits them as
+ * separate files into the final build.
+ *
+ * Enables each Wordpress build folder to maintain its structure like style.css, editor-style.css et al.
+ *
+ * @see https://rollupjs.org/plugin-development/#transform
+ */
+export async function transform(
+  this: PluginContext,
+  code: string,
+  id: string,
+  blockFile: WordpressBlockJson,
+): Promise<string | boolean | void> {
+  const [filename] = id.split('?')
+  const isStylesheet = /\.(post|s)?css$/i.test(filename ?? '') === true
+  if (!isStylesheet) return
+
+  // FIXME: upstream used this as with an undefined value (passed as
+  // argument to the custom transform function).  this may
+  // indicate that invocation of `preprocessCSS` does not belong here...?
+  //  const result = await preprocessCSS(code, id, config)
+  const result = await preprocessCSS(code, id, {} as ResolvedConfig)
+
+  const outputPath = trimSlashes(
+    id.replace(`${process.cwd()}${sep}src`, '').replace(/\\/g, '/'),
+  ).replace(/\.(post|s)?css$/i, '.css')
+
+  const style = blockFile?.style ? wrapArray(blockFile.style) : []
+  const editorStyle = blockFile?.editorStyle
+    ? wrapArray(blockFile.editorStyle)
+    : []
+  const viewStyle = blockFile?.viewStyle ? wrapArray(blockFile.viewStyle) : []
+  const stylesheets = (
+    [...style, ...editorStyle, ...viewStyle].flat(Infinity) as string[]
+  )
+    .filter((s) => !!s)
+    .map((s) => trimSlashes(s.replace('file:.', '')))
+
+  if (stylesheets.includes(outputPath) === false) return result.code
+
+  this.emitFile({
+    type: 'asset',
+    fileName: outputPath,
+    source: result.code,
+  } satisfies EmittedAsset)
+}

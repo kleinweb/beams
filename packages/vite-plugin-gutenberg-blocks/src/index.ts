@@ -1,0 +1,125 @@
+// SPDX-FileCopyrightText: 2024-2025 Temple University <kleinweb@temple.edu>
+// SPDX-FileCopyrightText: 2023-2025 Evo Mark Ltd.
+// SPDX-License-Identifier: GPL-3.0-or-later OR MIT
+
+import { dirname, join, resolve, sep } from 'node:path'
+import { readFileSync } from 'node:fs'
+
+import type { OutputBundle } from 'rollup'
+import type { Plugin as VitePlugin } from 'vite'
+import { viteStaticCopy } from 'vite-plugin-static-copy'
+import react from '@vitejs/plugin-react'
+
+import { sideload } from './buildStart.ts'
+import { generateBundle } from './generateBundle.ts'
+import { options } from './options.ts'
+import { outputOptions } from './outputOptions.ts'
+import { transform } from './transform.ts'
+import type { WordpressBlockJson } from './transform.ts'
+
+export interface PluginConfig {
+  watch?: string[]
+  outDir?: string
+  dependencies?: string[]
+}
+
+const NAME = 'vite-plugin-gutenberg-blocks'
+
+const watchFiles = ['./src/template.php', './src/render.php']
+
+const withPluginName = (name: string, plugin: Object) => ({
+  ...plugin,
+  name,
+})
+
+export const createViteBlock = (
+  pluginConfig: PluginConfig = {},
+): VitePlugin[] => {
+  const pwd = process.env['PWD'] as string
+  const blockName = dirname(pwd)
+  const blockFile: WordpressBlockJson = JSON.parse(
+    readFileSync(`${pwd}/src/block.json`, 'utf-8'),
+  )
+
+  const { watch = watchFiles, outDir = '', dependencies = [] } = pluginConfig
+  // TODO: why bother?
+  const outputDirectory =
+    new RegExp(sep + '$').test(outDir) === false && outDir
+      ? outDir + sep
+      : outDir
+
+  return [
+    {
+      name: NAME,
+      // config: () => config({ outDir: normalisedOut, blockFile }),
+      config: () => ({
+        //  outputDirectory,
+        build: {
+          lib: {
+            // FIXME: no
+            entry: resolve(pwd, 'src/index.jsx'),
+            name: 'index',
+            formats: ['iife'],
+            fileName: () => 'index.js',
+          },
+          outDir: outputDirectory
+            ? join(outputDirectory, blockName)
+            : // FIXME: whyyy?
+              resolve(pwd, `../../../build/${blockName}`),
+          rollupOptions: {},
+          target: 'es2022',
+          minify: true,
+          cssCodeSplit: true, // This option stops the default `styles.css` from being bundled
+        },
+      }),
+
+      // FIXME: refer to roots implementation of externals
+      options,
+      outputOptions,
+
+      async buildStart(_options) {
+        watch.forEach((file) => this.addWatchFile(file))
+        await sideload.call(this, blockFile, outputDirectory)
+      },
+      transform(code, id) {
+        transform.call(this, code, id, blockFile)
+      },
+      generateBundle(_options, bundle: OutputBundle) {
+        this.emitFile({
+          type: 'asset',
+          fileName: 'index.asset.php',
+          // TODO: rename this function
+          source: generateBundle(bundle, dependencies),
+        })
+      },
+    },
+    withPluginName(
+      `${NAME}-copy`,
+      viteStaticCopy({
+        silent: true,
+        targets: [
+          // Since they're not imported into the bundle, we need to copy
+          // these files manually.
+          {
+            src: resolve(pwd, 'src/block.json'),
+            dest: '.',
+          },
+          {
+            src: resolve(pwd, 'src/*.php'),
+            dest: '.',
+          },
+        ],
+      }),
+    ),
+    withPluginName(
+      `${NAME}-react`,
+      react({
+        // FIXME: the plugin does not provide its own name and does not accept
+        // a value as option, thus we are stuck
+        // name: 'vite-plugin-gutenberg-blocks-react',
+        jsxRuntime: 'classic',
+        jsxImportSource: '@wordpress/element',
+      }),
+    ),
+  ]
+}
