@@ -20,7 +20,7 @@ export async function sideload(
   // FIXME: use generated type
   blockJson: WordpressBlockJson,
   outputDirectory: string,
-) {
+): Promise<void> {
   // Load the block.json options for "script" (frontend/backend) and "viewScript" (frontend)
   const viewScript = blockJson?.viewScript ?? []
   const standardScript = blockJson?.script ?? []
@@ -113,6 +113,4 @@ export async function sideload(
       } satisfies EmittedAsset)
     })
   }
-
-  return true
 }

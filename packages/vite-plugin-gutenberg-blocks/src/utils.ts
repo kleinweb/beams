@@ -5,7 +5,7 @@
 import crypto from 'node:crypto'
 import { parse, join } from 'node:path'
 
-export const generateFileHash = (contents: string) =>
+export const generateFileHash = (contents: string): string =>
   crypto.createHash('md5').update(contents).digest('hex')
 
 export const generatePhpAssetFile = (

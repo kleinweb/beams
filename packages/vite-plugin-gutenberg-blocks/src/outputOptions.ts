@@ -2,11 +2,12 @@
 // SPDX-FileCopyrightText: 2023-2025 Evo Mark Ltd.
 // SPDX-License-Identifier: GPL-3.0-or-later OR MIT
 
-import type { OutputOptions } from 'rollup'
+import type { NullValue, OutputOptions } from 'rollup'
 
 const ns = '@wordpress/'
 const nsExclude = ['icons', 'interface']
-export const wordpressMatch = new RegExp(
+
+export const wordpressMatch: RegExp = new RegExp(
   `^${ns}(?!(${nsExclude.join('|')})).*$`,
 ) // /^@wordpress\/(?!(icons|interface)).*$/
 
@@ -20,13 +21,16 @@ export const external: Record<string, string> = {
 }
 
 /**
- * Returns a custom global resolver that maps external libraries and objects to their `window` counterparts
+ * Returns a custom global resolver that maps external libraries and
+ * objects to their `window` counterparts.
  */
-export function outputOptions(outputOptions: OutputOptions) {
-  // Save the original resolver so we can use it for files we're not interested in
+export function outputOptions(
+  outputOptions: OutputOptions,
+): OutputOptions | NullValue {
+  // Save the original resolver so we can use it for files we're not interested in.
   const configGlobals = outputOptions.globals
 
-  const resolveGlobals = (id: string) => {
+  const resolveGlobals = (id: string): string => {
     // options.globals is an object - defer to it
     if (
       typeof configGlobals === 'object' &&
