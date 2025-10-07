@@ -2,8 +2,8 @@
 // SPDX-FileCopyrightText: 2023-2025 Evo Mark Ltd.
 // SPDX-License-Identifier: GPL-3.0-or-later OR MIT
 
-import { generateFileHash, generatePhpAssetFile } from './utils.ts'
 import type { OutputAsset, OutputBundle, OutputChunk } from 'rollup'
+import { generateFileHash, generatePhpAssetFile } from './utils.ts'
 
 export function isOutputChunk(
   bundle: OutputAsset | OutputChunk,

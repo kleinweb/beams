@@ -2,20 +2,19 @@
 // SPDX-FileCopyrightText: 2023-2025 Evo Mark Ltd.
 // SPDX-License-Identifier: GPL-3.0-or-later OR MIT
 
-import { dirname, join, resolve, sep } from 'node:path'
 import { readFileSync } from 'node:fs'
-
+import { dirname, join, resolve, sep } from 'node:path'
+import react from '@vitejs/plugin-react'
 import type { OutputBundle } from 'rollup'
 import type { Plugin as VitePlugin } from 'vite'
 import { viteStaticCopy } from 'vite-plugin-static-copy'
-import react from '@vitejs/plugin-react'
 
 import { sideload } from './buildStart.ts'
 import { generateBundle } from './generateBundle.ts'
 import { options } from './options.ts'
 import { outputOptions } from './outputOptions.ts'
-import { transform } from './transform.ts'
 import type { WordpressBlockJson } from './transform.ts'
+import { transform } from './transform.ts'
 
 export interface PluginConfig {
   watch?: string[]

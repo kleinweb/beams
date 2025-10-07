@@ -2,8 +2,8 @@
 // SPDX-FileCopyrightText: 2023-2025 Evo Mark Ltd.
 // SPDX-License-Identifier: GPL-3.0-or-later OR MIT
 
-import type { InputOptions, ExternalOption } from 'rollup'
-import { wordpressMatch, external } from './outputOptions.ts'
+import type { ExternalOption, InputOptions } from 'rollup'
+import { external, wordpressMatch } from './outputOptions.ts'
 
 export function options(options: InputOptions): InputOptions {
   if (Array.isArray(options.external) === false) {

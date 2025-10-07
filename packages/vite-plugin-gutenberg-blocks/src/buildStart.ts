@@ -2,15 +2,15 @@
 // SPDX-FileCopyrightText: 2023-2025 Evo Mark Ltd.
 // SPDX-License-Identifier: GPL-3.0-or-later OR MIT
 
+import { resolve } from 'node:path'
+import { build as esBuild } from 'esbuild'
 import type { EmittedAsset, PluginContext } from 'rollup'
 import type { WordpressBlockJson } from './transform.ts'
 import {
+  extractFilenameWithoutExtension,
   generateFileHash,
   generatePhpAssetFile,
-  extractFilenameWithoutExtension,
 } from './utils.ts'
-import { build as esBuild } from 'esbuild'
-import { resolve } from 'node:path'
 
 const normaliseArray = (source: unknown) =>
   Array.isArray(source) ? source : [source]
@@ -40,7 +40,7 @@ export async function sideload(
     const scriptPath = resolve(`${process.env['PWD']}/src/${script}`)
     // Vite won't track this file for watching, so we'll add a manual watcher
     this.addWatchFile('./src/' + script)
-    let wpImports: Array<string> = []
+    const wpImports: Array<string> = []
     // Build the script as a sideloaded file that isn't injected into the main bundle
     const result = await esBuild({
       entryPoints: [scriptPath],

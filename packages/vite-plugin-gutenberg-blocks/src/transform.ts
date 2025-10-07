@@ -2,10 +2,10 @@
 // SPDX-FileCopyrightText: 2023-2025 Evo Mark Ltd.
 // SPDX-License-Identifier: GPL-3.0-or-later OR MIT
 
-import type { EmittedAsset, PluginContext } from 'rollup'
 import { sep } from 'node:path'
-import { preprocessCSS } from 'vite'
+import type { EmittedAsset, PluginContext } from 'rollup'
 import type { ResolvedConfig } from 'vite'
+import { preprocessCSS } from 'vite'
 
 export interface WordpressBlockJson {
   style: string | string[]

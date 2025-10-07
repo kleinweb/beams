@@ -34,7 +34,7 @@ export function outputOptions(
     // options.globals is an object - defer to it
     if (
       typeof configGlobals === 'object' &&
-      configGlobals.hasOwnProperty(id) &&
+      Object.hasOwn(configGlobals, id) &&
       configGlobals[id]
     ) {
       return configGlobals[id]
@@ -50,7 +50,7 @@ export function outputOptions(
     }
 
     // see if it's a static wp external
-    if (external.hasOwnProperty(id) && external[id]) {
+    if (Object.hasOwn(external, id) && external[id]) {
       return external[id]
     }
 
