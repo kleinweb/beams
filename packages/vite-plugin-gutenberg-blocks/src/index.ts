@@ -56,8 +56,7 @@ export const createViteBlock = (
         //  outputDirectory,
         build: {
           lib: {
-            // FIXME: no
-            entry: resolve(pwd, 'src/index.jsx'),
+            entry: resolve(pwd, 'src/index.ts'),
             name: 'index',
             formats: ['iife'],
             fileName: () => 'index.js',
