@@ -37,6 +37,7 @@ export async function transform(
   code: string,
   id: string,
   blockFile: WordpressBlockJson,
+  config: ResolvedConfig,
 ): Promise<string | true> {
   const [filename] = id.split('?')
   const isStylesheet = /\.(post|s)?css$/i.test(filename ?? '') === true
@@ -44,11 +45,7 @@ export async function transform(
     return ''
   }
 
-  // FIXME: upstream used this as with an undefined value (passed as
-  // argument to the custom transform function).  this may
-  // indicate that invocation of `preprocessCSS` does not belong here...?
-  //  const result = await preprocessCSS(code, id, config)
-  const result = await preprocessCSS(code, id, {} as ResolvedConfig)
+  const result = await preprocessCSS(code, id, config)
 
   const outputPath = trimSlashes(
     id.replace(`${process.cwd()}${sep}src`, '').replace(/\\/g, '/'),

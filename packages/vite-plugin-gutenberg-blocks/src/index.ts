@@ -14,6 +14,7 @@ import { options } from './options.ts'
 import { outputOptions } from './outputOptions.ts'
 import type { WordpressBlockJson } from './transform.ts'
 import { transform } from './transform.ts'
+import type { ResolvedConfig } from 'vite'
 
 export interface PluginConfig {
   watch?: string[]
@@ -40,6 +41,8 @@ export const createViteBlock = (
     new RegExp(`${sep}$`).test(outDir) === false && outDir
       ? outDir + sep
       : outDir
+
+  let resolvedConfig: ResolvedConfig
 
   return [
     {
@@ -69,6 +72,10 @@ export const createViteBlock = (
       options,
       outputOptions,
 
+      configResolved(config) {
+        resolvedConfig = config
+      },
+
       async buildStart(_options) {
         watch.forEach((file) => {
           this.addWatchFile(file)
@@ -76,7 +83,7 @@ export const createViteBlock = (
         await sideload.call(this, blockFile, outputDirectory)
       },
       transform(code, id) {
-        transform.call(this, code, id, blockFile)
+        transform.call(this, code, id, blockFile, resolvedConfig)
       },
       generateBundle(_options, bundle: OutputBundle) {
         this.emitFile({
