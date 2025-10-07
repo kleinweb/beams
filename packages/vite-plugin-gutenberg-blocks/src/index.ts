@@ -3,18 +3,20 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR MIT
 
 import { readFileSync } from 'node:fs'
-import { dirname, join, resolve, sep } from 'node:path'
+import { basename, join, normalize, resolve } from 'node:path'
+
 import react from '@vitejs/plugin-react'
 import type { OutputBundle } from 'rollup'
 import type { ResolvedConfig, Plugin as VitePlugin } from 'vite'
 import { viteStaticCopy } from 'vite-plugin-static-copy'
+
 import { sideload } from './buildStart.ts'
 import { generateBundle } from './generateBundle.ts'
 import { options } from './options.ts'
 import { outputOptions } from './outputOptions.ts'
+import { packageRoot } from './package.ts'
 import type { WordpressBlockJson } from './transform.ts'
 import { transform } from './transform.ts'
-import type { ResolvedConfig } from 'vite'
 
 export interface PluginConfig {
   watch?: string[]
@@ -29,38 +31,34 @@ const watchFiles = ['./src/template.php', './src/render.php']
 export const createViteBlock = (
   pluginConfig: PluginConfig = {},
 ): VitePlugin[] => {
-  const pwd = process.env['PWD'] as string
-  const blockName = dirname(pwd)
+  const packageDir = packageRoot()
+  const srcDir = join(packageDir, 'src')
+  const blockName = basename(packageDir)
   const blockFile: WordpressBlockJson = JSON.parse(
-    readFileSync(`${pwd}/src/block.json`, 'utf-8'),
+    readFileSync(`${srcDir}/block.json`, 'utf-8'),
   )
 
-  const { watch = watchFiles, outDir = '', dependencies = [] } = pluginConfig
-  // TODO: why bother?
-  const outputDirectory =
-    new RegExp(`${sep}$`).test(outDir) === false && outDir
-      ? outDir + sep
-      : outDir
+  const {
+    watch = watchFiles,
+    outDir = `${packageDir}/dist`,
+    dependencies = [],
+  } = pluginConfig
 
+  const outputDirectory = normalize(outDir)
   let resolvedConfig: ResolvedConfig
 
   return [
     {
       name: NAME,
-      // config: () => config({ outDir: normalisedOut, blockFile }),
       config: () => ({
-        //  outputDirectory,
         build: {
           lib: {
-            entry: resolve(pwd, 'src/index.ts'),
+            entry: join(srcDir, 'index.ts'),
             name: 'index',
             formats: ['iife'],
             fileName: () => 'index.js',
           },
-          outDir: outputDirectory
-            ? join(outputDirectory, blockName)
-            : // FIXME: whyyy?
-              resolve(pwd, `../../../build/${blockName}`),
+          outDir: join(outputDirectory, blockName),
           rollupOptions: {},
           target: 'es2022',
           minify: true,
@@ -100,11 +98,13 @@ export const createViteBlock = (
         // Since they're not imported into the bundle, we need to copy
         // these files manually.
         {
-          src: resolve(pwd, 'src/block.json'),
+          src: resolve(srcDir, 'block.json'),
           dest: '.',
         },
         {
-          src: resolve(pwd, 'src/*.php'),
+          // FIXME: throws an error when silent is false and no php
+          // files exist
+          src: resolve(srcDir, '*.php'),
           dest: '.',
         },
       ],
