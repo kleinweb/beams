@@ -39,12 +39,12 @@ export async function sideload(
   for (const script of concatScripts) {
     const scriptPath = resolve(`${process.env['PWD']}/src/${script}`)
     // Vite won't track this file for watching, so we'll add a manual watcher
-    this.addWatchFile('./src/' + script)
+    this.addWatchFile(`./src/${script}`)
     const wpImports: Array<string> = []
     // Build the script as a sideloaded file that isn't injected into the main bundle
     const result = await esBuild({
       entryPoints: [scriptPath],
-      outfile: outputDirectory + '/' + script,
+      outfile: `${outputDirectory}/${script}`,
       platform: 'browser',
       bundle: true,
       write: false,
@@ -66,7 +66,7 @@ export async function sideload(
               { filter: /.*/, namespace: 'wordpress-alias' },
               (args) => {
                 const moduleName = args.path.split('/')[1]
-                wpImports.push('wp-' + moduleName)
+                wpImports.push(`wp-${moduleName}`)
                 return {
                   contents: `
                 const wpModule = window.wp.${moduleName};
@@ -87,14 +87,14 @@ export async function sideload(
 
     const bundledDependencies = Object.keys(result.metafile.inputs).filter(
       (dep) => {
-        if (dep === 'src/' + script) return false
+        if (dep === `src/${script}`) return false
         if (/:/.test(dep)) return false
         else return true
       },
     )
 
     bundledDependencies.forEach((dep) => {
-      this.addWatchFile('./' + dep)
+      this.addWatchFile(`./${dep}`)
     })
 
     result.outputFiles.forEach((file) => {
@@ -103,7 +103,7 @@ export async function sideload(
 
       this.emitFile({
         type: 'asset',
-        fileName: filename + '.asset.php',
+        fileName: `${filename}.asset.php`,
         source: generatePhpAssetFile(wpImports, hash),
       } satisfies EmittedAsset)
       this.emitFile({

@@ -10,7 +10,11 @@
     "declarationMap": true,
     "isolatedDeclarations": true,
     "allowJs": false,
-    "checkJs": false
+    "checkJs": false,
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "noEmit": true
   },
   "include": ["src/**/*.ts"]
 }

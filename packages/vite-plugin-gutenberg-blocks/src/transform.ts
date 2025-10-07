@@ -37,10 +37,12 @@ export async function transform(
   code: string,
   id: string,
   blockFile: WordpressBlockJson,
-): Promise<string | boolean | void> {
+): Promise<string | true> {
   const [filename] = id.split('?')
   const isStylesheet = /\.(post|s)?css$/i.test(filename ?? '') === true
-  if (!isStylesheet) return
+  if (!isStylesheet) {
+    return ''
+  }
 
   // FIXME: upstream used this as with an undefined value (passed as
   // argument to the custom transform function).  this may
@@ -63,11 +65,15 @@ export async function transform(
     .filter((s) => !!s)
     .map((s) => trimSlashes(s.replace('file:.', '')))
 
-  if (stylesheets.includes(outputPath) === false) return result.code
+  if (stylesheets.includes(outputPath) === false) {
+    return result.code
+  }
 
   this.emitFile({
     type: 'asset',
     fileName: outputPath,
     source: result.code,
   } satisfies EmittedAsset)
+
+  return true
 }
