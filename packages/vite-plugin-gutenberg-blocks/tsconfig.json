@@ -8,7 +8,9 @@
     "outDir": "dist",
     "declaration": true,
     "declarationMap": true,
-    "isolatedDeclarations": true
+    "isolatedDeclarations": true,
+    "allowJs": false,
+    "checkJs": false
   },
   "include": ["src/**/*.ts"]
 }

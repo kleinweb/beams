@@ -71,6 +71,9 @@ importers:
       '@types/node':
         specifier: ^22.18.8
         version: 22.18.8
+      esbuild:
+        specifier: ^0.25.10
+        version: 0.25.10
       tsdown:
         specifier: ^0.15.6
         version: 0.15.6(typescript@5.9.3)
