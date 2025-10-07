@@ -1,0 +1,42 @@
+{
+  "name": "@kleinweb/explore-bar",
+  "description": "Block providing a call-to-action bar for recirculation to the Klein College website",
+  "version": "0.1.0",
+  "keywords": [
+    "klein-college",
+    "gutenberg-block"
+  ],
+  "author": {
+    "name": "Klein College of Media and Communication",
+    "email": "kleinweb@temple.edu",
+    "url": "https://github.com/kleinweb"
+  },
+  "license": "GPL-3.0-or-later",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "vite build --emptyOutDir --watch",
+    "build": "vite build --emptyOutDir",
+    "check": "pnpm check:ts && biome check",
+    "check:ts": "tsc --noEmit",
+    "fmt": "biome check --write"
+  },
+  "devDependencies": {
+    "@kleinweb/tsconfig": "workspace:*",
+    "@kleinweb/vite-plugin-gutenberg-blocks": "workspace:*",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.1",
+    "@types/wordpress__block-editor": "^11.5.17",
+    "@types/wordpress__blocks": "^12.5.18",
+    "@vitejs/plugin-react": "^5.0.4",
+    "typescript": "^5.9.3",
+    "vite": "^7.1.9"
+  },
+  "dependencies": {
+    "@wordpress/block-editor": "^15.5.0",
+    "@wordpress/blocks": "^15.5.0",
+    "@wordpress/i18n": "^6.5.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  }
+}
