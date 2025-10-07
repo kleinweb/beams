@@ -20,6 +20,7 @@
         pkgs.ripgrep
         pkgs.turbo
         pkgs.nodejs
+        pkgs.nodejs.pkgs.pnpm
       ];
 
       checksPkgs = config.pre-commit.settings.enabledPackages ++ [

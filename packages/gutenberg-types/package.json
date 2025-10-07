@@ -11,7 +11,7 @@
     "access": "public"
   },
   "devDependencies": {
-    "@kleinweb/tsconfig": "*",
+    "@kleinweb/tsconfig": "workspace:*",
     "typescript": "^5.8.3"
   }
 }
