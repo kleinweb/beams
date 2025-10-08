@@ -33,3 +33,6 @@ fix:
 [group("qa")]
 fmt:
     treefmt
+
+clean:
+    fd -t d -I dist packages -X rm -rf {}

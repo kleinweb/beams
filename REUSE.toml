@@ -16,6 +16,7 @@ path = [
   "**/.gitattributes",
   "**/.gitignore",
   "**/.gitkeep",
+  "**/pnpm-lock.yaml",
   ".config/org_id",
 ]
 SPDX-FileCopyrightText = "(C) 2024-2025 Temple University <kleinweb@temple.edu>"
@@ -37,4 +38,4 @@ SPDX-FileCopyrightText = [
   "(C) 2025 Temple University <kleinweb@temple.edu>",
   "(C) 2016-2025 The WordPress Contributors",
 ]
-SPDX-License-Identifier = "GPL-3.0-or-later"
+SPDX-License-Identifier = "GPL-3.0-or-later OR MPL-2.0"
