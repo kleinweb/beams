@@ -1,6 +1,6 @@
 {
   "name": "@kleinweb/gutenberg-types",
-  "version": "21.8.0",
+  "version": "21.8.1",
   "license": "GPL-3.0-or-later",
   "type": "module",
   "publishConfig": {
