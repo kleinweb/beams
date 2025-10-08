@@ -1,3 +1,8 @@
 {
-  "extends": ["@kleinweb/tsconfig/tsconfig.recommended.json"]
+  "$schema": "https://www.schemastore.org/tsconfig.json",
+  "extends": ["@kleinweb/tsconfig/tsconfig.recommended.json"],
+  "compilerOptions": {
+    "moduleResolution": "bundler",
+    "isolatedDeclarations": true
+  }
 }

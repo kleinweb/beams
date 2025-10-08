@@ -1,0 +1,18 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "kleinweb/explore-bar",
+  "version": "1.0.0",
+  "title": "Explore Bar",
+  "keywords": [],
+  "category": "widgets",
+  "description": "A call-to-action bar for recirculation to the Klein College website",
+  "supports": {
+    "html": false
+  },
+  "attributes": {},
+  "textdomain": "kleinweb",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./editor.css",
+  "style": "file:./style.css"
+}

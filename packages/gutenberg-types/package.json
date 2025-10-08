@@ -3,15 +3,22 @@
   "version": "21.8.0",
   "license": "GPL-3.0-or-later",
   "type": "module",
-  "types": "src/types.d.ts",
-  "exports": {
-    ".": "./dist/"
-  },
   "publishConfig": {
     "access": "public"
   },
   "devDependencies": {
     "@kleinweb/tsconfig": "workspace:*",
+    "tsdown": "^0.15.6",
     "typescript": "^5.8.3"
+  },
+  "scripts": {
+    "build": "tsdown"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js",
+    "./package.json": "./package.json"
   }
 }

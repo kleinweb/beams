@@ -1,0 +1,1 @@
+<?php return ["dependencies" => ["wp-blocks","wp-block-editor","wp-i18n"], "version" => "7b4361316b2e447aacb8d3033a123149"];
