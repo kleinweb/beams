@@ -20,6 +20,7 @@ vendor
 
 # Context-specific
 .cache
+.claude/settings.local.json
 .direnv
 .idea
 .local
@@ -28,5 +29,7 @@ vendor
 wp-cli.local.yml
 
 # Build artifacts
-.turbo
+.turbo/
+dist/
 result
+target/

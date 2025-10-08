@@ -1,0 +1,53 @@
+{
+  "name": "@kleinweb/vite-plugin-gutenberg-blocks",
+  "version": "2.5.0",
+  "description": "Vite-powered Gutenberg block development for WordPress",
+  "type": "module",
+  "scripts": {
+    "build": "pnpm check && tsdown",
+    "dev": "tsdown --watch",
+    "check": "pnpm run check:ts && biome check",
+    "check:ts": "tsc --noEmit",
+    "test": "pnpm check",
+    "fmt": "biome check --write"
+  },
+  "keywords": [
+    "vite-plugin",
+    "wordpress",
+    "gutenberg"
+  ],
+  "author": "Klein College of Media and Communication",
+  "license": "GPL-3.0-or-later",
+  "homepage": "https://github.com/kleinweb/beams",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kleinweb/beams.git"
+  },
+  "engines": {
+    "node": "^22.0.0 || ^23.0.0 || ^24.0.0"
+  },
+  "devDependencies": {
+    "@kleinweb/tsconfig": "*",
+    "@types/node": "^22.18.8",
+    "esbuild": "^0.25.10",
+    "tsdown": "^0.15.6"
+  },
+  "peerDependencies": {
+    "typescript": "^5.8.3",
+    "vite": "^7.0.0"
+  },
+  "dependencies": {
+    "@kleinweb/gutenberg-types": "workspace:^21.8.0",
+    "@vitejs/plugin-react": "^5.0.4",
+    "read-package-up": "^11.0.0",
+    "rollup": "^4.52.4",
+    "vite-plugin-static-copy": "^3.1.3"
+  },
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js",
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.js"
+}

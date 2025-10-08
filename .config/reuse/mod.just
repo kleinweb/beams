@@ -10,10 +10,10 @@ and := ' AND '
 alias lint := check
 alias public-domain := cc0
 
+[no-cd]
 check:
   reuse lint
 
-[private]
 annotate license +ARGS:
   reuse annotate \
     --template compact \
