@@ -3,17 +3,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR MIT
 
 import { sep } from 'node:path'
+import type { BlockJson } from '@kleinweb/gutenberg-types'
 import type { EmittedAsset, PluginContext } from 'rollup'
 import type { ResolvedConfig } from 'vite'
 import { preprocessCSS } from 'vite'
-
-export interface WordpressBlockJson {
-  style: string | string[]
-  editorStyle?: string | string[]
-  viewStyle?: string | string[]
-  viewScript?: string | string[]
-  script?: string | string[]
-}
 
 function trimSlashes(filename: string): string {
   return filename.replace(/^[/\\]+|[/\\]+$/g, '')
@@ -36,7 +29,7 @@ export async function transform(
   this: PluginContext,
   code: string,
   id: string,
-  blockFile: WordpressBlockJson,
+  blockJson: BlockJson,
   config: ResolvedConfig,
 ): Promise<string | true> {
   const [filename] = id.split('?')
@@ -51,11 +44,11 @@ export async function transform(
     id.replace(`${process.cwd()}${sep}src`, '').replace(/\\/g, '/'),
   ).replace(/\.(post|s)?css$/i, '.css')
 
-  const style = blockFile?.style ? wrapArray(blockFile.style) : []
-  const editorStyle = blockFile?.editorStyle
-    ? wrapArray(blockFile.editorStyle)
+  const style = blockJson?.style ? wrapArray(blockJson.style) : []
+  const editorStyle = blockJson?.editorStyle
+    ? wrapArray(blockJson.editorStyle)
     : []
-  const viewStyle = blockFile?.viewStyle ? wrapArray(blockFile.viewStyle) : []
+  const viewStyle = blockJson?.viewStyle ? wrapArray(blockJson.viewStyle) : []
   const stylesheets = (
     [...style, ...editorStyle, ...viewStyle].flat(Infinity) as string[]
   )

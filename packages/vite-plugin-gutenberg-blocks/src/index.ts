@@ -4,7 +4,7 @@
 
 import { readFileSync } from 'node:fs'
 import { basename, join, normalize, resolve } from 'node:path'
-
+import type { BlockJson } from '@kleinweb/gutenberg-types'
 import react from '@vitejs/plugin-react'
 import type { OutputBundle } from 'rollup'
 import type { ResolvedConfig, Plugin as VitePlugin } from 'vite'
@@ -15,7 +15,6 @@ import { generateBundle } from './generateBundle.ts'
 import { options } from './options.ts'
 import { outputOptions } from './outputOptions.ts'
 import { packageRoot } from './package.ts'
-import type { WordpressBlockJson } from './transform.ts'
 import { transform } from './transform.ts'
 
 export interface PluginConfig {
@@ -34,7 +33,7 @@ export const createViteBlock = (
   const packageDir = packageRoot()
   const srcDir = join(packageDir, 'src')
   const blockName = basename(packageDir)
-  const blockFile: WordpressBlockJson = JSON.parse(
+  const blockJson: BlockJson = JSON.parse(
     readFileSync(`${srcDir}/block.json`, 'utf-8'),
   )
 
@@ -78,10 +77,10 @@ export const createViteBlock = (
         watch.forEach((file) => {
           this.addWatchFile(file)
         })
-        await sideload.call(this, blockFile, outputDirectory)
+        await sideload.call(this, blockJson, outputDirectory)
       },
       transform(code, id) {
-        transform.call(this, code, id, blockFile, resolvedConfig)
+        transform.call(this, code, id, blockJson, resolvedConfig)
       },
       generateBundle(_options, bundle: OutputBundle) {
         this.emitFile({

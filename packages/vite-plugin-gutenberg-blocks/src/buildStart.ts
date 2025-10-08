@@ -3,9 +3,9 @@
 // SPDX-License-Identifier: GPL-3.0-or-later OR MIT
 
 import { resolve } from 'node:path'
+import type { BlockJson } from '@kleinweb/gutenberg-types'
 import { build as esBuild } from 'esbuild'
 import type { EmittedAsset, PluginContext } from 'rollup'
-import type { WordpressBlockJson } from './transform.ts'
 import {
   extractFilenameWithoutExtension,
   generateFileHash,
@@ -17,8 +17,7 @@ const normaliseArray = (source: unknown) =>
 
 export async function sideload(
   this: PluginContext,
-  // FIXME: use generated type
-  blockJson: WordpressBlockJson,
+  blockJson: BlockJson,
   outputDirectory: string,
 ): Promise<void> {
   // Load the block.json options for "script" (frontend/backend) and "viewScript" (frontend)
