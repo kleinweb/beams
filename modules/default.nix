@@ -28,13 +28,9 @@
         imports = [
           ./kleinweb/dev/module.nix
           ./kleinweb/dev/ssh/aliases.nix
-          ./kleinweb/dev/tools/module.nix
         ];
-
-        kleinweb.dev.tools.enable = true;
       };
       kleinweb-dev__ssh-aliases = ./kleinweb/dev/ssh/aliases.nix;
-      kleinweb-dev__tools = ./kleinweb/dev/tools/module.nix;
     };
   };
 }
