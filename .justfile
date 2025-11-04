@@ -5,6 +5,7 @@
 
 import '.config/vars.just'
 
+mod aws '.config/aws'
 mod release '.config/release'
 mod reuse '.config/reuse'
 
