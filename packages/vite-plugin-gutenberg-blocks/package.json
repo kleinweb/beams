@@ -39,7 +39,7 @@
   "dependencies": {
     "@kleinweb/gutenberg-types": "workspace:^21.8.0",
     "@vitejs/plugin-react": "^5.0.4",
-    "read-package-up": "^11.0.0",
+    "read-package-up": "^12.0.0",
     "rollup": "^4.52.4",
     "vite-plugin-static-copy": "^3.1.3"
   },
