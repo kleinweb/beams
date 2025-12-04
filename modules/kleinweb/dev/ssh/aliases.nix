@@ -19,6 +19,7 @@ in
     "kleinforms-staging" = mkKinstaHost "kleinforms" 30014;
 
     "kleinsites-production" = mkKinstaHost "kleinsites" 60160;
+    "kleinsites-preprod" = mkKinstaHost "kleinsites" 13106;
     "kleinsites-staging" = mkKinstaHost "kleinsites" 17779;
 
     "logancenter-production" = mkKinstaHost "logancenter" 32428;
