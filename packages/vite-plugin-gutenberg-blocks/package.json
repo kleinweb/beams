@@ -29,8 +29,8 @@
   "devDependencies": {
     "@kleinweb/tsconfig": "*",
     "@types/node": "^22.18.8",
-    "esbuild": "^0.25.10",
-    "tsdown": "^0.15.6"
+    "esbuild": "^0.27.0",
+    "tsdown": "^0.17.0"
   },
   "peerDependencies": {
     "typescript": "^5.8.3",
