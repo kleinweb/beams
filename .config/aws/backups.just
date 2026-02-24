@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: (C) 2026 Temple University <kleinweb@temple.edu>
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 list-recovery-points vault fields="RecoveryPointArn,CreationDate":
     aws backup list-recovery-points-by-backup-vault \
         --backup-vault-name {{ vault }} \

@@ -1,1 +1,4 @@
+# SPDX-FileCopyrightText: (C) 2026 Temple University <kleinweb@temple.edu>
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 mod backups
