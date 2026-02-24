@@ -23,18 +23,6 @@
             ".changeset/"
             "CHANGELOG.md"
           ];
-          php-lint = {
-            enable = true;
-            description = "Check PHP files for syntax errors";
-            package = config.packages.php-lint;
-            entry = "php-lint";
-            types = [
-              "file"
-              "php"
-            ];
-            # Other PHP linters will likely fail when there are syntax errors.
-            fail_fast = true;
-          };
           reuse = {
             enable = true;
           };
