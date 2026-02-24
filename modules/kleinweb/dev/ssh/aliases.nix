@@ -35,7 +35,7 @@ in
     "templenews-staging" = mkKinstaHost "templenews" 34285;
 
     "templetv-production" = mkKinstaHost "templetv" 38736;
-    "templetv-staging" = mkKinstaHost "templetv" 59770;
+    "templetv-staging" = mkKinstaHost "templetv" 50416;
 
     "whipradio-production" = mkKinstaHost "whipradio" 19001;
     "whipradio-staging" = mkKinstaHost "whipradio" 35166;
