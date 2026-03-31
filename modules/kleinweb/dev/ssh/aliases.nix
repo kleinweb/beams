@@ -41,15 +41,5 @@ in
     "whipradio-staging" = mkKinstaHost "whipradio" 35166;
 
     "seesaw-production" = mkKinstaHost2 "seesaw" 30503;
-
-    "hostone" = {
-      hostname = "67.225.164.90";
-      port = 5623;
-    };
-
-    "kleinweb-db" = {
-      hostname = "67.225.164.91";
-      port = 522;
-    };
   };
 }
