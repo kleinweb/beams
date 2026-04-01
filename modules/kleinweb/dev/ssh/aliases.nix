@@ -29,7 +29,9 @@ in
     "phillyn-staging" = mkKinstaHost "phillyn" 47991;
 
     "ijtelepresence-production" = mkKinstaHost "ijtelepresence" 30098;
+
     "telepresence-production" = mkKinstaHost "telepresence" 22359;
+    "telepresence-staging" = mkKinstaHost "telepresence" 16142;
 
     "templenews-production" = mkKinstaHost "templenews" 44769;
     "templenews-staging" = mkKinstaHost "templenews" 34285;
