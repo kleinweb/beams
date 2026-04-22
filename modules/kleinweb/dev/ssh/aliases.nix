@@ -1,6 +1,5 @@
-# SPDX-FileCopyrightText: (C) 2025 Temple University <kleinweb@temple.edu>
+# SPDX-FileCopyrightText: (C) 2025-2026 Temple University <kleinweb@temple.edu>
 # SPDX-License-Identifier: GPL-3.0-or-later
-
 let
   mkKinstaHost = user: port: {
     inherit user port;
@@ -14,6 +13,7 @@ in
 {
   programs.ssh.matchBlocks = {
     "isprsite-production" = mkKinstaHost "isprsite" 24919;
+    "isprsite-staging" = mkKinstaHost "isprsite" 42377;
 
     "kleinforms-production" = mkKinstaHost "kleinforms" 49032;
     "kleinforms-staging" = mkKinstaHost "kleinforms" 30014;
