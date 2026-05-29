@@ -40,6 +40,7 @@
   libxml2_13,
   networkmanager,
   openssl,
+  procps,
   pugixml,
   webkitgtk_4_1,
   xorg,
@@ -120,6 +121,12 @@ stdenv.mkDerivation (finalAttrs: {
     # re-wraps it through `security.wrappers` to grant CAP_NET_RAW; the cap
     # propagates through this wrapper via ambient capabilities.
     makeWrapper $out/opt/Citrix/NSGClient/bin/NSGClient $out/bin/NSGClient \
+      --prefix PATH : "${
+        lib.makeBinPath [
+          dpkg
+          procps
+        ]
+      }" \
       --prefix GIO_EXTRA_MODULES : "${glib-networking}/lib/gio/modules"
 
     # Desktop entry: strip the hardcoded /opt path so it launches `NSGClient`
