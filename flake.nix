@@ -8,7 +8,7 @@
   };
 
   outputs =
-    inputs@{ flake-parts, ... }:
+    inputs@{ nixpkgs, flake-parts, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } {
       systems = [
         "x86_64-linux"
@@ -25,8 +25,14 @@
       ];
 
       perSystem =
-        { pkgs, ... }:
+        { system, pkgs, ... }:
         {
+          _module.args = {
+            pkgs = import nixpkgs {
+              inherit system;
+              config.allowUnfree = true;
+            };
+          };
           formatter = pkgs.nixfmt-rfc-style;
         };
 
