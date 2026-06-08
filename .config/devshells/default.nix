@@ -14,13 +14,13 @@
         pkgs.fd
         pkgs.gnused
         pkgs.jq
-        inputs'.nixpkgs-trunk.legacyPackages.just
-        pkgs.moreutils # provides `sponge`
+        pkgs.just
+        pkgs.moreutils
         pkgs.reuse
         pkgs.ripgrep
         pkgs.turbo
         pkgs.nodejs
-        pkgs.nodejs.pkgs.pnpm
+        pkgs.pnpm
       ];
 
       checksPkgs = config.pre-commit.settings.enabledPackages ++ [
