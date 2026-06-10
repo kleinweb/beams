@@ -14,6 +14,7 @@
 {
   lib,
   stdenv,
+  fetchurl,
   requireFile,
   dpkg,
   autoPatchelfHook,
@@ -35,17 +36,30 @@
   libnotify,
   libproxy,
   libuuid,
+  libx11,
   # libxml2 2.14 bumped its soname to libxml2.so.16; NSGClient is linked
   # against the old libxml2.so.2, so we need the pinned 2.13 series.
   libxml2_13,
+  libxscrnsaver,
   networkmanager,
   openssl,
   procps,
   pugixml,
   webkitgtk_4_1,
-  xorg,
 }:
 
+let
+  # NSGClient and nsgverctl are linked against `libgpgme.so.11` (gpgme 1.x).
+  # nixpkgs has moved to gpgme 2.x, which bumped the soname to `.so.45` and
+  # left no pinned 1.x attribute behind. Override back to the last 1.x release.
+  gpgme1 = gpgme.overrideAttrs (_old: rec {
+    version = "1.24.3";
+    src = fetchurl {
+      url = "mirror://gnupg/gpgme/gpgme-${version}.tar.bz2";
+      sha256 = "1pahikkdrv6d1b22ssh0vwrhy23ps9b8k4fxkxjchy5is5dpzhdz";
+    };
+  });
+in
 stdenv.mkDerivation (finalAttrs: {
   pname = "citrix-secure-access";
   version = "25.8.2";
@@ -90,7 +104,7 @@ stdenv.mkDerivation (finalAttrs: {
     dconf
     glib
     glib-networking
-    gpgme
+    gpgme1
     gsettings-desktop-schemas
     gtk3
     libarchive
@@ -107,8 +121,8 @@ stdenv.mkDerivation (finalAttrs: {
     (pugixml.override { shared = true; })
     stdenv.cc.cc # libstdc++ / libgcc_s
     webkitgtk_4_1
-    xorg.libX11
-    xorg.libXScrnSaver # libXss.so.1
+    libx11
+    libxscrnsaver # libXss.so.1
   ];
 
   installPhase = ''
