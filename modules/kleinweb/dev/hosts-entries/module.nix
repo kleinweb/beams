@@ -29,6 +29,7 @@ in
         "kleinit.seesaw.ddev.site"
 
         "templenews.ddev.site"
+        "broadandcecil.templenews.ddev.site"
         "chopboom.templenews.ddev.site"
         "longform.templenews.ddev.site"
         "makingitwork.templenews.ddev.site"
