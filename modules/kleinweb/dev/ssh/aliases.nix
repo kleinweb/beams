@@ -11,7 +11,7 @@ let
   };
 in
 {
-  programs.ssh.matchBlocks = {
+  programs.ssh.settings = {
     "isprsite-production" = mkKinstaHost "isprsite" 24919;
     "isprsite-staging" = mkKinstaHost "isprsite" 42377;
 
