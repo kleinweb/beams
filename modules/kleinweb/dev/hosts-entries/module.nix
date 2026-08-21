@@ -21,7 +21,7 @@ in
         "logance.ddev.site"
         "phillyn.ddev.site"
         "telepresence.ddev.site"
-        "tutv.ddev.site"
+        "templetv.ddev.site"
         "whipradio.ddev.site"
 
         "seesaw.ddev.site"
