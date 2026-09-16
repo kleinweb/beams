@@ -1,12 +1,6 @@
-# SPDX-FileCopyrightText: 2024-2025 Temple University <kleinweb@temple.edu>
+# SPDX-FileCopyrightText: 2024-2026 Temple University <kleinweb@temple.edu>
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-# Citrix Secure Access client (package `nsgclient`) for Linux — the NetScaler
-# Gateway VPN client. Unlike `citrix-workspace`, upstream ships a plain Debian
-# package with a fixed file tree, so this derivation is just:
-#
-#   unpack .deb  ->  autoPatchelfHook  ->  wrap for GTK
-#
 # The `NSGClient` binary hardcodes absolute `/opt/Citrix/...` paths for its
 # resources, config files and the IPC socket-path file, so it only *runs*
 # correctly when the companion NixOS module (`./module.nix`) has materialised
@@ -18,6 +12,7 @@
   requireFile,
   dpkg,
   autoPatchelfHook,
+  icoutils,
   wrapGAppsHook3,
   makeWrapper,
 
@@ -64,9 +59,6 @@ stdenv.mkDerivation (finalAttrs: {
   pname = "citrix-secure-access";
   version = "25.8.2";
 
-  # Unfree, EULA-gated: the .deb cannot be fetched inside the build sandbox.
-  # `requireFile` makes the build fail with the message below until the file
-  # has been added to the store manually.
   src = requireFile {
     name = "nsginstaller64.deb";
     sha256 = "1cq95i3i3bd67aknwxz4bdkqfj288dp0fvsa80w7g166jma0klsn";
@@ -75,7 +67,7 @@ stdenv.mkDerivation (finalAttrs: {
       downloaded automatically. Obtain the "Citrix Secure Access client for
       Ubuntu" .deb (named `nsginstaller64.deb`) from:
 
-        https://www.citrix.com/downloads/citrix-gateway/
+        https://www.citrix.com/downloads/citrix-secure-access/plug-ins/Citrix-Gateway-VPN-EPA-Clients-Ubuntu.html
 
       then add it to the Nix store with:
 
@@ -83,9 +75,6 @@ stdenv.mkDerivation (finalAttrs: {
     '';
   };
 
-  # stdenv has no built-in unpacker for `.deb`; a Debian package is an `ar`
-  # archive whose `data.tar.*` member holds the file tree. `dpkg-deb -x`
-  # extracts exactly that tree.
   unpackCmd = "dpkg-deb -x $curSrc source";
   sourceRoot = "source";
 
@@ -95,6 +84,7 @@ stdenv.mkDerivation (finalAttrs: {
   nativeBuildInputs = [
     autoPatchelfHook
     dpkg
+    icoutils
     makeWrapper
     wrapGAppsHook3
   ];
@@ -143,6 +133,30 @@ stdenv.mkDerivation (finalAttrs: {
       }" \
       --prefix GIO_EXTRA_MODULES : "${glib-networking}/lib/gio/modules"
 
+    # The tray icons ship only as `.ico`, which GTK4
+    # `Texture::from_filename()` cannot decode, so GTK4 bars (anything
+    # not going through gdk-pixbuf) render an invisible tray slot.
+    for ico in opt/Citrix/NSGClient/resx/images/*.ico; do
+      name="$(basename "$ico" .ico)"
+      icotool --extract --output="$TMPDIR" "$ico"
+      for png in "$TMPDIR/$name"_*.png; do
+        # icotool names extracts `<name>_<index>_<w>x<h>x<depth>.png`.
+        dim="''${png##*_}"
+        dim="''${dim%x*}"
+        install -Dm644 "$png" \
+          "$out/share/icons/hicolor/$dim/apps/$name.png"
+      done
+
+      # Also alongside the original, since the client reports `resx/images`
+      # as its `IconThemePath` and a tray may look there rather than in the
+      # system theme. Keeps `resx` a self-contained tree the module can
+      # symlink wholesale.
+      install -Dm644 "$TMPDIR/$name"_*_48x48x*.png \
+        "$out/opt/Citrix/NSGClient/resx/images/$name.png"
+
+      rm -f "$TMPDIR/$name"_*.png
+    done
+
     # Desktop entry: strip the hardcoded /opt path so it launches `NSGClient`
     # from PATH (which, on a NixOS host with the module, resolves to the
     # capability wrapper in /run/wrappers/bin first).
@@ -152,7 +166,7 @@ stdenv.mkDerivation (finalAttrs: {
       --replace-fail "/opt/Citrix/NSGClient/bin/NSGClient" "NSGClient" \
       --replace-fail \
         "Icon=/opt/Citrix/NSGClient/resx/images/icon_vpn.ico" \
-        "Icon=$out/opt/Citrix/NSGClient/resx/images/icon_vpn.ico"
+        "Icon=icon_vpn"
 
     runHook postInstall
   '';
