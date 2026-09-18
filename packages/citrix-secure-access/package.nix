@@ -40,6 +40,7 @@
   openssl,
   procps,
   pugixml,
+  systemd,
   webkitgtk_4_1,
 }:
 
@@ -180,6 +181,9 @@ stdenv.mkDerivation (finalAttrs: {
         lib.makeBinPath [
           dpkg
           procps
+          # `resolvectl`, which the client calls to flush the DNS cache after
+          # applying the gateway's split-DNS configuration.
+          systemd
         ]
       }"
   '';
