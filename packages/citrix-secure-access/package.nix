@@ -81,6 +81,11 @@ stdenv.mkDerivation (finalAttrs: {
   dontConfigure = true;
   dontBuild = true;
 
+  # wrapGAppsHook3 wraps $out/bin during postFixup, which would re-wrap the
+  # wrapper built below and drop its PATH prefix. Take the hook's arguments
+  # via `gappsWrapperArgs` and apply them in a single wrapper instead.
+  dontWrapGApps = true;
+
   nativeBuildInputs = [
     autoPatchelfHook
     dpkg
@@ -121,18 +126,6 @@ stdenv.mkDerivation (finalAttrs: {
     mkdir -p $out/bin $out/share/applications
     cp -r opt $out/opt
 
-    # `$out/bin/NSGClient` is a convenience entry point. The NixOS module
-    # re-wraps it through `security.wrappers` to grant CAP_NET_RAW; the cap
-    # propagates through this wrapper via ambient capabilities.
-    makeWrapper $out/opt/Citrix/NSGClient/bin/NSGClient $out/bin/NSGClient \
-      --prefix PATH : "${
-        lib.makeBinPath [
-          dpkg
-          procps
-        ]
-      }" \
-      --prefix GIO_EXTRA_MODULES : "${glib-networking}/lib/gio/modules"
-
     # The tray icons ship only as `.ico`, which GTK4
     # `Texture::from_filename()` cannot decode, so GTK4 bars (anything
     # not going through gdk-pixbuf) render an invisible tray slot.
@@ -169,6 +162,26 @@ stdenv.mkDerivation (finalAttrs: {
         "Icon=icon_vpn"
 
     runHook postInstall
+  '';
+
+  # `gappsWrapperArgs` is populated by wrapGAppsHook3 during preFixup, so the
+  # wrapper has to be built here rather than in installPhase -- otherwise the
+  # array is still empty and the GTK/pixbuf/schema settings are lost.
+  #
+  # `$out/bin/NSGClient` is a convenience entry point. The NixOS module
+  # re-wraps it through `security.wrappers` to grant CAP_NET_RAW; the cap
+  # propagates through this wrapper via ambient capabilities.
+  postFixup = ''
+    makeWrapper $out/opt/Citrix/NSGClient/bin/NSGClient $out/bin/NSGClient \
+      --inherit-argv0 \
+      --set-default XDG_DATA_DIRS /usr/local/share/:/usr/share/ \
+      "''${gappsWrapperArgs[@]}" \
+      --prefix PATH : "${
+        lib.makeBinPath [
+          dpkg
+          procps
+        ]
+      }"
   '';
 
   meta = {
