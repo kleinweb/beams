@@ -58,9 +58,9 @@ let
   # Three paths CANNOT be store symlinks, because the running client (or the
   # root `nsgverctl` service) writes to them:
   #
-  #   /opt/Citrix/NSGClient/.socketpath     IPC rendezvous file: nsgverctl
-  #                                         writes the socket path, NSGClient
-  #                                         reads it. Needs to exist, 0644.
+  #   /opt/Citrix/NSGClient/.socketpath     AF_UNIX datagram socket that
+  #                                         nsgverctl binds. Must NOT be
+  #                                         pre-created -- see the rule below.
   #   /opt/Citrix/NSGClient/nft_commands.txt  nftables ruleset scratch file
   #                                           written by nsgverctl. 0644.
   #   /opt/Citrix/NSGClient/tmp             scratch *directory* the service
@@ -85,7 +85,9 @@ let
   # Implement the list below (~5 lines): the three writable paths, plus the
   # globalConfiguration.json rule for whichever option fits this deployment.
   runtimeStateRules = [
-    "f /opt/Citrix/NSGClient/.socketpath 0644 root root - -"
+    # nsgverctl bind(2)s this path itself; bind fails EADDRINUSE if anything
+    # already exists there, so ensure it is absent rather than pre-creating it.
+    "r /opt/Citrix/NSGClient/.socketpath"
     "f /opt/Citrix/NSGClient/nft_commands.txt 0644 root root - -"
     "d /opt/Citrix/NSGClient/tmp 0755 root root -"
     (mkCopy "globalConfiguration.json")
@@ -130,6 +132,9 @@ in
         procps
       ];
       serviceConfig = {
+        # tmpfiles ordering against this unit is not guaranteed, so clear a
+        # stale socket here too. The leading `-` tolerates an absent path.
+        ExecStartPre = "-${pkgs.coreutils}/bin/rm -f /opt/Citrix/NSGClient/.socketpath";
         ExecStart = "${optTree}/NSGClient/service/nsgverctl";
         Restart = "always";
         KillMode = "process";
