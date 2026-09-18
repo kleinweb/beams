@@ -53,7 +53,10 @@ let
     # fail. Packet received from unauthentic NSGClient") and leaving the
     # command silently unanswered.  A copy carries CAP_NET_RAW, which cannot be
     # set on the read-only store path.
-    "C+ /opt/Citrix/NSGClient/bin/NSGClient 0755 root root - ${cfg.package}/opt/Citrix/NSGClient/bin/NSGClient"
+    # `r` first: earlier generations left a symlink here, and `C+` will not
+    # replace a symlink with a regular file.
+    "r /opt/Citrix/NSGClient/bin/NSGClient"
+    "C+ /opt/Citrix/NSGClient/bin/NSGClient 0755 root root - ${cfg.package}/libexec/NSGClient.unpatched"
   ]
   ++ map mkSymlink readOnlyEntries;
 
@@ -98,6 +101,20 @@ let
     (mkCopy "globalConfiguration.json")
   ];
 
+  # The deployed client is the stock binary, so nothing wraps it -- but it
+  # still needs a GIO TLS backend or every gateway connection fails with "TLS
+  # support is not available".  `exec` keeps `/proc/<pid>/exe` pointing at the
+  # FHS path, which `nsgverctl` requires (see the tmpfiles rule above).
+  launcher = pkgs.writeShellScriptBin "NSGClient" ''
+    export GIO_EXTRA_MODULES="${pkgs.glib-networking}/lib/gio/modules''${GIO_EXTRA_MODULES:+:$GIO_EXTRA_MODULES}"
+    # The client `dlopen`s libcurl by bare soname at runtime.  nix-ld resolves
+    # `DT_NEEDED` entries only, so a runtime dlopen searches the ordinary path
+    # and finds nothing -- sends then fail, and the client's error path logs an
+    # int through a `%s` and segfaults.
+    export LD_LIBRARY_PATH="${lib.makeLibraryPath cfg.package.runtimeLibraries}''${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+    exec /opt/Citrix/NSGClient/bin/NSGClient "$@"
+  '';
+
 in
 {
   options.services.citrix-secure-access = {
@@ -111,25 +128,24 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    environment.systemPackages = [ cfg.package ];
+    # `launcher` first: it must win the `NSGClient` name over the package's
+    # own store-path wrapper, which `nsgverctl` would reject.
+    environment.systemPackages = [
+      launcher
+      cfg.package
+    ];
 
-    # NSGClient needs CAP_NET_RAW for the VPN data path.  A `security.wrappers`
-    # entry cannot serve here: launching through it makes `/proc/<pid>/exe`
-    # report the wrapper, which `nsgverctl` rejects (see the tmpfiles rule
-    # above).  Set the capability directly on the copy instead.
-    # tmpfiles places the copy; this must run after it and before the client
-    # is launched.  `nsgverctl` needs it in place too, hence the ordering.
-    systemd.services.citrix-secure-access-setcap = {
-      description = "Grant CAP_NET_RAW to the Citrix Secure Access client";
-      wantedBy = [ "multi-user.target" ];
-      before = [ "nsgverctl.service" ];
-      after = [ "systemd-tmpfiles-setup.service" ];
-      serviceConfig = {
-        Type = "oneshot";
-        RemainAfterExit = true;
-        ExecStart = "${pkgs.libcap}/bin/setcap cap_net_raw+eip /opt/Citrix/NSGClient/bin/NSGClient";
-      };
-    };
+    # The deployed client is the stock, unpatched binary (see the tmpfiles rule
+    # above), so it resolves its libraries the FHS way.  Contribute them to the
+    # nix-ld pool rather than enabling nix-ld here -- that stays the user's
+    # choice, and without it this client cannot run.
+    programs.nix-ld.libraries = cfg.package.runtimeLibraries;
+
+    # No CAP_NET_RAW on the client.  A file capability puts the loader into
+    # secure-execution mode, which drops LD_LIBRARY_PATH -- and the stock,
+    # unpatched binary carries no RPATH, so it then cannot find its libraries
+    # at all.  The data path does not need it: with no capability set,
+    # tunnelled TCP connections complete and negotiate TLS.
 
     # Privileged daemon: route/nftables/DNS plumbing for the tunnel.
     systemd.services.nsgverctl = {
@@ -138,20 +154,16 @@ in
       after = [ "network.target" ];
       # The daemon shells out to route/firewall tooling at runtime.
       path = with pkgs; [
+        # `sha256sum`, which the daemon runs (by bare name) to checksum the
+        # client binary when validating the sender of each packet.
+        coreutils
         iproute2
         nftables
         procps
+        # `systemctl`, which the daemon calls when restarting the client.
+        systemd
       ];
       serviceConfig = {
-        # `nsgverctl` invokes these by absolute path rather than resolving them
-        # on PATH, so `path` above does not reach them.  Without `nft` it cannot
-        # install the tunnel ruleset, leaving the client's VA_INSTALL command
-        # unanswered.  Bind them into this unit's own mount namespace so the
-        # host's `/usr` stays untouched.
-        BindReadOnlyPaths = [
-          "${pkgs.nftables}/bin/nft:/usr/sbin/nft"
-          "${pkgs.systemd}/bin/systemctl:/usr/bin/systemctl"
-        ];
         # tmpfiles ordering against this unit is not guaranteed, so clear a
         # stale socket here too. The leading `-` tolerates an absent path.
         ExecStartPre = "-${pkgs.coreutils}/bin/rm -f /opt/Citrix/NSGClient/.socketpath";
