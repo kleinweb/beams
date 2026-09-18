@@ -132,6 +132,15 @@ in
         procps
       ];
       serviceConfig = {
+        # `nsgverctl` invokes these by absolute path rather than resolving them
+        # on PATH, so `path` above does not reach them.  Without `nft` it cannot
+        # install the tunnel ruleset, leaving the client's VA_INSTALL command
+        # unanswered.  Bind them into this unit's own mount namespace so the
+        # host's `/usr` stays untouched.
+        BindReadOnlyPaths = [
+          "${pkgs.nftables}/bin/nft:/usr/sbin/nft"
+          "${pkgs.systemd}/bin/systemctl:/usr/bin/systemctl"
+        ];
         # tmpfiles ordering against this unit is not guaranteed, so clear a
         # stale socket here too. The leading `-` tolerates an absent path.
         ExecStartPre = "-${pkgs.coreutils}/bin/rm -f /opt/Citrix/NSGClient/.socketpath";
