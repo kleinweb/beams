@@ -124,8 +124,9 @@ stdenv.mkDerivation (finalAttrs: {
   installPhase = ''
     runHook preInstall
 
-    mkdir -p $out/bin $out/share/applications
+    mkdir -p $out/bin $out/libexec $out/share/applications
     cp -r opt $out/opt
+
 
     # The tray icons ship only as `.ico`, which GTK4
     # `Texture::from_filename()` cannot decode, so GTK4 bars (anything
@@ -172,8 +173,28 @@ stdenv.mkDerivation (finalAttrs: {
   # `$out/bin/NSGClient` is a convenience entry point. The NixOS module
   # re-wraps it through `security.wrappers` to grant CAP_NET_RAW; the cap
   # propagates through this wrapper via ambient capabilities.
+  # Must run after fixupPhase: autoPatchelfHook rewrites every ELF under $out,
+  # which would change the hash this copy exists to preserve.
+  preservePristinePhase = ''
+    # `nsgverctl` validates the client by sha256-ing whatever sits at
+    # /opt/Citrix/NSGClient/bin/NSGClient and comparing it against a hash of
+    # the stock binary baked into the service.  Re-extract the original from
+    # the .deb so the module has an untouched copy to deploy; it runs under
+    # nix-ld using the libraries the module contributes to that pool.
+    dpkg-deb --fsys-tarfile $src \
+      | tar -xO ./opt/Citrix/NSGClient/bin/NSGClient \
+      > $out/libexec/NSGClient.unpatched
+    chmod 0755 $out/libexec/NSGClient.unpatched
+  '';
+
+  postPhases = [ "preservePristinePhase" ];
+
   postFixup = ''
-    makeWrapper $out/opt/Citrix/NSGClient/bin/NSGClient $out/bin/NSGClient \
+    # Deliberately NOT named `NSGClient`: `nsgverctl` rejects any client whose
+    # `/proc/<pid>/exe` is not /opt/Citrix/NSGClient/bin/NSGClient, so this
+    # wrapper cannot establish a tunnel.  It stays for debugging the patched
+    # binary; the module ships the launcher that actually works.
+    makeWrapper $out/opt/Citrix/NSGClient/bin/NSGClient $out/bin/NSGClient-patched \
       --inherit-argv0 \
       --set-default XDG_DATA_DIRS /usr/local/share/:/usr/share/ \
       "''${gappsWrapperArgs[@]}" \
@@ -187,6 +208,11 @@ stdenv.mkDerivation (finalAttrs: {
         ]
       }"
   '';
+
+  # The module deploys the stock, unpatched client (see `libexec/` above), which
+  # resolves its libraries the FHS way.  Expose them so the module can hand them
+  # to nix-ld without restating -- and drifting from -- this list.
+  passthru.runtimeLibraries = finalAttrs.buildInputs;
 
   meta = {
     description = "Citrix Secure Access client (NetScaler Gateway VPN) for Linux";
