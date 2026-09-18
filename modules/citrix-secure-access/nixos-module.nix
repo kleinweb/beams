@@ -117,13 +117,18 @@ in
     # entry cannot serve here: launching through it makes `/proc/<pid>/exe`
     # report the wrapper, which `nsgverctl` rejects (see the tmpfiles rule
     # above).  Set the capability directly on the copy instead.
-    system.activationScripts.citrix-secure-access-setcap = {
-      deps = [ "systemd-tmpfiles" ];
-      text = ''
-        if [ -f /opt/Citrix/NSGClient/bin/NSGClient ]; then
-          ${pkgs.libcap}/bin/setcap cap_net_raw+eip /opt/Citrix/NSGClient/bin/NSGClient
-        fi
-      '';
+    # tmpfiles places the copy; this must run after it and before the client
+    # is launched.  `nsgverctl` needs it in place too, hence the ordering.
+    systemd.services.citrix-secure-access-setcap = {
+      description = "Grant CAP_NET_RAW to the Citrix Secure Access client";
+      wantedBy = [ "multi-user.target" ];
+      before = [ "nsgverctl.service" ];
+      after = [ "systemd-tmpfiles-setup.service" ];
+      serviceConfig = {
+        Type = "oneshot";
+        RemainAfterExit = true;
+        ExecStart = "${pkgs.libcap}/bin/setcap cap_net_raw+eip /opt/Citrix/NSGClient/bin/NSGClient";
+      };
     };
 
     # Privileged daemon: route/nftables/DNS plumbing for the tunnel.
