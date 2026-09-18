@@ -46,9 +46,14 @@ let
     "d /opt/Citrix/NSGClient/bin 0755 root root -"
     # The EPA (Endpoint Analysis) library is dlopen()ed by absolute path.
     "L+ /opt/Citrix/EPA - - - - ${optTree}/EPA"
-    # bin/NSGClient must resolve to the capability wrapper so that the
-    # service-spawned instance also gets CAP_NET_RAW, not just desktop launches.
-    "L+ /opt/Citrix/NSGClient/bin/NSGClient - - - - /run/wrappers/bin/NSGClient"
+    # `nsgverctl` authenticates each packet by reading the sender's
+    # `/proc/<pid>/exe` and comparing it against this exact path, so the client
+    # must *be* this file rather than a symlink to it -- `exe` resolves through
+    # symlinks and would report the store path, failing the check ("Path match
+    # fail. Packet received from unauthentic NSGClient") and leaving the
+    # command silently unanswered.  A copy carries CAP_NET_RAW, which cannot be
+    # set on the read-only store path.
+    "C+ /opt/Citrix/NSGClient/bin/NSGClient 0755 root root - ${cfg.package}/opt/Citrix/NSGClient/bin/NSGClient"
   ]
   ++ map mkSymlink readOnlyEntries;
 
@@ -108,16 +113,17 @@ in
   config = lib.mkIf cfg.enable {
     environment.systemPackages = [ cfg.package ];
 
-    # NSGClient needs CAP_NET_RAW for the VPN data path. `setcap` cannot
-    # be applied to a read-only store path, so we route launches through
-    # a security wrapper.  NixOS capability wrappers raise the cap as
-    # *ambient*, so it survives the exec chain: wrapper -> gApps wrapper
-    # -> real ELF.
-    security.wrappers.NSGClient = {
-      source = "${cfg.package}/bin/NSGClient";
-      owner = "root";
-      group = "root";
-      capabilities = "cap_net_raw+eip";
+    # NSGClient needs CAP_NET_RAW for the VPN data path.  A `security.wrappers`
+    # entry cannot serve here: launching through it makes `/proc/<pid>/exe`
+    # report the wrapper, which `nsgverctl` rejects (see the tmpfiles rule
+    # above).  Set the capability directly on the copy instead.
+    system.activationScripts.citrix-secure-access-setcap = {
+      deps = [ "systemd-tmpfiles" ];
+      text = ''
+        if [ -f /opt/Citrix/NSGClient/bin/NSGClient ]; then
+          ${pkgs.libcap}/bin/setcap cap_net_raw+eip /opt/Citrix/NSGClient/bin/NSGClient
+        fi
+      '';
     };
 
     # Privileged daemon: route/nftables/DNS plumbing for the tunnel.
