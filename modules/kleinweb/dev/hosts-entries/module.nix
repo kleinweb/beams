@@ -16,6 +16,7 @@ in
     networking.hosts = {
       "127.0.0.1" = [
         "kleinforms.ddev.site"
+        "kleinglobal.ddev.site"
         "kleinsites.ddev.site"
         "logancenter.ddev.site"
         "logance.ddev.site"

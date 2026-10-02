@@ -9,6 +9,10 @@ let
     inherit user port;
     hostname = "34.162.230.19";
   };
+  mkKinstaHost3 = user: port: {
+    inherit user port;
+    hostname = "129.80.57.27";
+  };
 in
 {
   programs.ssh.settings = {
@@ -17,6 +21,9 @@ in
 
     "kleinforms-production" = mkKinstaHost "kleinforms" 49032;
     "kleinforms-staging" = mkKinstaHost "kleinforms" 30014;
+
+    "kleinglobal-production" = mkKinstaHost3 "kleinglobal" 35940;
+    "kleinglobal-staging" = mkKinstaHost3 "kleinglobal" 22981;
 
     "kleinsites-production" = mkKinstaHost "kleinsites" 60160;
     "kleinsites-preprod" = mkKinstaHost "kleinsites" 13106;
