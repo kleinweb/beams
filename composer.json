@@ -1,0 +1,80 @@
+{
+  "$schema": "https://getcomposer.org/schema.json",
+  "name": "kleinweb/beams",
+  "license": "GPL-3.0-or-later",
+  "description": "Shared libraries and tools for Klein College Digital Initiatives projects",
+  "homepage": "https://github.com/kleinweb/beams",
+  "authors": [
+    {
+      "name": "Chris Montgomery",
+      "email": "chrismont@temple.edu",
+      "homepage": "https://github.com/montchr"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/kleinweb/beams/issues"
+  },
+  "repositories": [
+    {
+      "name": "wp-packages",
+      "type": "composer",
+      "url": "https://repo.wp-packages.org"
+    }
+  ],
+  "require": {
+    "php": "~8.4",
+    "kleinweb/lib": "^3.2.0"
+  },
+  "require-dev": {
+    "friendsofphp/php-cs-fixer": "^3",
+    "kleinweb/php-coding-standards": "^0.8.0",
+    "php-parallel-lint/php-parallel-lint": "*",
+    "phpstan/extension-installer": "^1",
+    "phpstan/phpstan": "^2",
+    "phpstan/phpstan-deprecation-rules": "^2",
+    "phpstan/phpstan-webmozart-assert": "^2",
+    "slevomat/coding-standard": "^8.15",
+    "squizlabs/php_codesniffer": "^3.7.1",
+    "swissspidy/phpstan-no-private": "^1"
+  },
+  "config": {
+    "allow-plugins": {
+      "alleyinteractive/composer-wordpress-autoloader": true,
+      "composer/installers": true,
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "phpstan/extension-installer": true
+    },
+    "lock": false,
+    "optimize-autoloader": true,
+    "preferred-install": {
+      "*": "dist"
+    },
+    "sort-packages": true
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "autoload": {
+    "psr-4": {
+      "Kleinweb\\Beams\\": "src/"
+    },
+    "files": []
+  },
+  "extra": {
+    "installer-paths": {
+      "wp-content/mu-plugins/{$name}/": ["type:wordpress-muplugin"],
+      "wp-content/plugins/{$name}/": ["type:wordpress-plugin"],
+      "wp-content/themes/{$name}/": ["type:wordpress-theme"]
+    }
+  },
+  "scripts": {
+    "check-syntax": "parallel-lint --show-deprecated --exclude .git --exclude .cache --exclude .data --exclude .direnv --exclude node_modules --exclude vendor",
+    "php-cs-fixer": "php-cs-fixer",
+    "phpcbf": "phpcbf --extensions=php --standard=$PRJ_ROOT/.phpcs.xml.dist",
+    "phpcs": "phpcs --extensions=php --standard=$PRJ_ROOT/.phpcs.xml.dist",
+    "phpstan": "phpstan analyse --memory-limit 2G",
+    "check": ["@check-syntax .", "@php-cs-fixer check", "@phpcs", "@phpstan"],
+    "lint": ["@check-syntax", "@phpcs", "@phpstan"],
+    "fix": ["@php-cs-fixer fix", "@phpcbf"],
+    "post-autoload-dump": ["Roots\\Acorn\\ComposerScripts::postAutoloadDump"]
+  }
+}

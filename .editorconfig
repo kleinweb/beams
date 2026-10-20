@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2022-2025 Temple University
+# SPDX-FileCopyrightText: 2022-2026 Temple University
 # SPDX-License-Identifier: CC0-1.0
 
 ###: http://editorconfig.org
@@ -22,14 +22,15 @@ trim_trailing_whitespace = false
 
 [*.{bash,sh}]
 binary_next_line = true
+indent_size = 4
 simplify = true
 switch_case_indent = true
 
-[*.{php,xml}]
+[{justfile,*.just}]
 indent_size = 4
 indent_style = space
 
-[{Justfile,justfile,.justfile,*.{just}}]
+[*.{php,xml}]
 indent_size = 4
 indent_style = space
 

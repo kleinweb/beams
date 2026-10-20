@@ -1,10 +1,8 @@
-# SPDX-FileCopyrightText: 2024-2025 Temple University <kleinweb@temple.edu>
-#
+# SPDX-FileCopyrightText: 2024-2026 Temple University <kleinweb@temple.edu>
 # SPDX-License-Identifier: GPL-3.0-or-later
-
 {
   perSystem =
-    { config, pkgs, ... }:
+    { inputs', ... }:
     {
       pre-commit.settings = {
         hooks = {
@@ -16,33 +14,25 @@
               "file"
               "php"
             ];
+            stages = [ "pre-commit" ];
           };
           markdownlint.enable = true;
           markdownlint.excludes = [
             # Auto-generated
-            ".changeset/"
             "CHANGELOG.md"
+            "CLAUDE.md"
           ];
-          reuse = {
-            enable = true;
-          };
-          treefmt = {
-            enable = true;
-            settings.formatters = [
-              config.formatter
-              pkgs.biome
-              pkgs.dos2unix
-              pkgs.prettier
-              pkgs.taplo
-            ];
-          };
+          treefmt.enable = true;
           yamllint.enable = true;
+          yamllint.excludes = [
+            "^\.copier-answers\.yml$"
+            "^\.ddev/.+$"
+          ];
         };
         default_stages = [
           "pre-commit"
           "pre-push"
         ];
-
         excludes = [ ];
       };
     };

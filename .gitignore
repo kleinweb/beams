@@ -1,10 +1,16 @@
-# SPDX-FileCopyrightText: 2024-2025 Temple University <kleinweb@temple.edu>
+# SPDX-FileCopyrightText: 2024-2026 Temple University <kleinweb@temple.edu>
 # SPDX-License-Identifier: CC0-1.0
 
-# Data/logs
+
+
+
+# Data/logs/testing
 .data
-*.log
+*.log*
 *.sql
+/test-results/
+/playwright-report/
+/blob-report/
 
 # Secrets
 auth.json
@@ -12,6 +18,7 @@ auth.json
 .env.*
 !.env.example
 .ssh
+*.key
 *.pem
 
 # Dependencies
@@ -19,17 +26,18 @@ node_modules
 vendor
 
 # Context-specific
-.cache
-.claude/settings.local.json
+*.cache
+*.local
+*.local.*
+!*.local*.example
+*.tmp
+/.bin/php
 .direnv
 .idea
-.local
 .php-cs-fixer.cache
 .pre-commit-config.yaml
-wp-cli.local.yml
 
 # Build artifacts
-.turbo/
-dist/
+.turbo
+hot
 result
-target/

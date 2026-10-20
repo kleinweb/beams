@@ -1,16 +1,19 @@
-# SPDX-FileCopyrightText: 2024-2025 Temple University <kleinweb@temple.edu>
+# SPDX-FileCopyrightText: 2024-2026 Temple University <kleinweb@temple.edu>
 # SPDX-License-Identifier: GPL-3.0-or-later
 {
   description = "Beams";
+
   inputs = {
     flake-parts.url = "github:hercules-ci/flake-parts";
-    pre-commit-hooks.url = "github:cachix/pre-commit-hooks.nix";
-    pre-commit-hooks.inputs.nixpkgs.follows = "nixpkgs";
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    beams.url = "github:kleinweb/beams";
+    git-hooks.url = "github:cachix/git-hooks.nix";
+    nixos-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs-trunk.url = "github:NixOS/nixpkgs/master";
+    nixpkgs.follows = "nixos-unstable";
   };
 
   outputs =
-    inputs@{ nixpkgs, flake-parts, ... }:
+    inputs@{ flake-parts, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } {
       systems = [
         "x86_64-linux"
@@ -19,25 +22,26 @@
       ];
 
       imports = [
-        inputs.pre-commit-hooks.flakeModule
+        inputs.git-hooks.flakeModule
 
-        ./.config/devshells
-        ./.config/git-hooks
+        ./.config/devshells.nix
+        ./.config/git-hooks.nix
 
         ./modules
         ./packages
       ];
 
       perSystem =
-        { system, pkgs, ... }:
+        { inputs', system, ... }:
         {
-          _module.args = {
-            pkgs = import nixpkgs {
-              inherit system;
-              config.allowUnfree = true;
-            };
+          _module.args.pkgs = import inputs.nixpkgs {
+            inherit system;
+            overlays = [
+              (_final: prev: {
+                php = prev.php84;
+              })
+            ];
           };
-          formatter = pkgs.nixfmt;
         };
     };
 }

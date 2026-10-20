@@ -13,12 +13,15 @@ This project uses **pnpm** (version 10.18.0). All package management commands sh
 ## Common Commands
 
 ### Development
+
 - `pnpm dev` - Start development mode for all packages (via Turbo)
 - `pnpm build` - Build all packages (via Turbo)
 - `pnpm lint` - Run linting across all packages (via Turbo)
 
 ### Package-Specific Commands
+
 Navigate to individual package directories to run package-specific commands:
+
 - **vite-plugin-gutenberg-blocks**:
   - `pnpm build` - Build via tsdown
   - `pnpm dev` - Watch mode build
@@ -34,12 +37,14 @@ Navigate to individual package directories to run package-specific commands:
   - `pnpm fmt` - Format with Biome
 
 ### Code Quality
+
 - `just fmt` - Format code with treefmt (runs Biome, nixfmt, prettier, taplo, dos2unix)
 - `just check` - Check for lint/format issues (runs REUSE compliance, dotenv-linter, nix flake check)
 - `just fix` - Apply all formatter + fixer changes
 - `biome check --write` - Format/fix with Biome directly
 
 ### Releases
+
 - `pnpm changeset` - Create a changeset for version bumping
 - `pnpm release` - Build and publish packages (runs `pnpm build && changeset publish`)
 
@@ -59,6 +64,7 @@ packages/
 ### Key Packages
 
 **@kleinweb/vite-plugin-gutenberg-blocks**
+
 - Vite plugin that enables modern frontend tooling for WordPress Gutenberg blocks
 - Handles React JSX transformation with WordPress element compatibility (`jsxImportSource: '@wordpress/element'`)
 - Generates WordPress-specific asset manifests (`index.asset.php`)
@@ -68,12 +74,14 @@ packages/
 - Main export: `createViteBlock()` function that returns an array of Vite plugins
 
 **@kleinweb/gutenberg-types**
+
 - Provides TypeScript type definitions for WordPress Gutenberg APIs
 - Types are sourced from upstream Gutenberg releases (cached in `.cache/` directory)
 - Used by blocks and tools to get proper typing for WordPress globals
 
 **Gutenberg Block Development Pattern**
 Blocks follow this structure (see `explore-bar` package as reference):
+
 - `src/block.json` - WordPress block metadata
 - `src/index.ts` - Entry point that registers the block with WordPress
 - `src/Edit.tsx` - Block editor component
@@ -84,6 +92,7 @@ Blocks follow this structure (see `explore-bar` package as reference):
 ### TypeScript Configuration
 
 The `@kleinweb/tsconfig` package provides shared TypeScript configurations:
+
 - `tsconfig.base.json` - Base configuration
 - `tsconfig.node.json` - Node.js projects
 - `tsconfig.react.json` - React projects
@@ -115,6 +124,7 @@ Packages extend these via `"extends": "@kleinweb/tsconfig/..."` in their `tsconf
 ### Development Environment
 
 The project uses Nix for reproducible development environments:
+
 - `flake.nix` defines the development shell
 - `direnv` with `.envrc` for automatic environment loading
 - Node.js version enforced: ^22.0.0 || ^23.0.0 || ^24.0.0 (per vite-plugin-gutenberg-blocks)

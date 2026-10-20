@@ -1,22 +1,20 @@
-# SPDX-FileCopyrightText: (C) 2022-2025 Temple University <kleinweb@temple.edu>
+# SPDX-FileCopyrightText: (C) 2022-2026 Temple University <kleinweb@temple.edu>
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-import '../vars.just'
+import 'common.vars.just'
 
 gpl3 := 'GPL-3.0-or-later'
 mit := 'MIT'
 and := ' AND '
 
-alias lint := check
 alias public-domain := cc0
 
-[no-cd]
-check:
+lint:
   reuse lint
 
+[private]
 annotate license +ARGS:
   reuse annotate \
-    --template compact \
     --copyright-prefix spdx-c \
     --license '{{license}}' \
     --copyright '{{owner-attr}}' \
@@ -25,10 +23,10 @@ annotate license +ARGS:
 
 [doc: "Annotate all unlicensed files"]
 [no-cd]
-annotate-missing license="gpl":
+annotate-missing task:
   reuse lint --json \
   | jq -r '.non_compliant.missing_licensing_info.[]' \
-  | xargs -n1 -I{} just reuse::{{license}} {{prj-root}}/{}
+  | xargs -n1 -I{} just reuse::{{task}} {{prj-root}}/{}
 
 [doc: "Annotate all plaintext note files with the documentation license"]
 docs:

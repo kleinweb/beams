@@ -1,8 +1,16 @@
-# SPDX-FileCopyrightText: 2024-2025 Temple University <kleinweb@temple.edu>
+# SPDX-FileCopyrightText: (C) 2025-2026 Temple University <kleinweb@temple.edu>
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 [global]
-excludes = ["**/node_modules/**", "**/vendor/**", "**/*.min.*"]
+excludes = [
+  "**/node_modules/**",
+  "**/vendor/**",
+  "**/*.min.*",
+  "**/AGENTS.md",
+  "**/CHANGELOG.md",
+  "**/CLAUDE.md",
+  "pnpm-lock.yaml",
+]
 
 [formatter.biome]
 command = "biome"
@@ -14,7 +22,6 @@ options = [
 ]
 includes = [
   "*.css",
-  "*.graphql",
   "*.js",
   "*.ts",
   "*.mjs",
@@ -29,7 +36,7 @@ includes = [
   "*.json",
   "*.jsonc",
 ]
-excludes = [".changeset/**"]
+excludes = []
 
 [formatter.dos2unix]
 command = "dos2unix"
@@ -43,11 +50,31 @@ options = []
 includes = ["*.nix"]
 excludes = []
 
+[formatter.php-cs-fixer]
+command = "composer"
+options = [
+  "php-cs-fixer",
+  "fix",
+  # Required when passing multiple paths:
+  "--config=$PRJ_ROOT/.php-cs-fixer.dist.php",
+  "--",
+]
+priority = 0
+includes = ["*.php"]
+excludes = []
+
+[formatter.phpcbf]
+command = "composer"
+options = ["phpcbf", "--"]
+priority = 1
+includes = ["*.php"]
+excludes = []
+
 [formatter.prettier]
 command = "prettier"
 options = ["--write"]
-includes = ["*.md", "*.mdx", "*.yaml", "*.yml"]
-excludes = ["CHANGELOG.md"]
+includes = ["*.md", "*.mdx", "*.scss", "*.yaml", "*.yml"]
+excludes = ["CHANGELOG.md", ".ddev/**"]
 
 [formatter.taplo]
 command = "taplo"
