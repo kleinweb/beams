@@ -25,6 +25,7 @@ bump version:
 publish:
     pnpm build
     pnpm publish -r
+    git push --follow-tags
 
 new-change:
     pnpm changeset
