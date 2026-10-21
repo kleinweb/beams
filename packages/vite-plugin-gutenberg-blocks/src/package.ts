@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: GPL-3.0-or-later AND MPL-2.0
  */
 
-import { existsSync } from 'node:fs'
-import { dirname, resolve } from 'node:path'
-import { readPackageUpSync } from 'read-package-up'
+import {existsSync} from 'node:fs'
+import {dirname, resolve} from 'node:path'
+import {readPackageUpSync} from 'read-package-up'
 
 export function packageJsonFile(): string {
   const path = readPackageUpSync()?.path

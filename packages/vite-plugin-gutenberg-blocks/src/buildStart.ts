@@ -2,10 +2,10 @@
 // SPDX-FileCopyrightText: 2023-2025 Evo Mark Ltd.
 // SPDX-License-Identifier: GPL-3.0-or-later OR MIT
 
-import { resolve } from 'node:path'
-import type { BlockJson } from '@kleinweb/gutenberg-types'
-import { build as esBuild } from 'esbuild'
-import type { EmittedAsset, PluginContext } from 'rollup'
+import {resolve} from 'node:path'
+import type {BlockJson} from '@kleinweb/gutenberg-types'
+import {build as esBuild} from 'esbuild'
+import type {EmittedAsset, PluginContext} from 'rollup'
 import {
   extractFilenameWithoutExtension,
   generateFileHash,
@@ -30,8 +30,8 @@ export async function sideload(
   // Combine arrays into array of files
   const concatScripts = viewScripts
     .concat(standardScripts)
-    .filter((script) => script.startsWith('file'))
-    .map((script) => {
+    .filter(script => script.startsWith('file'))
+    .map(script => {
       return script.replace('file:./', '')
     })
 
@@ -53,7 +53,7 @@ export async function sideload(
           name: 'alias-wordpress',
           setup(build) {
             // Intercept @wordpress/* paths
-            build.onResolve({ filter: /^@wordpress\// }, (args) => {
+            build.onResolve({filter: /^@wordpress\//}, args => {
               return {
                 path: args.path,
                 namespace: 'wordpress-alias',
@@ -61,13 +61,11 @@ export async function sideload(
             })
 
             // Generate a shim for @wordpress/* imports
-            build.onLoad(
-              { filter: /.*/, namespace: 'wordpress-alias' },
-              (args) => {
-                const moduleName = args.path.split('/')[1]
-                wpImports.push(`wp-${moduleName}`)
-                return {
-                  contents: `
+            build.onLoad({filter: /.*/, namespace: 'wordpress-alias'}, args => {
+              const moduleName = args.path.split('/')[1]
+              wpImports.push(`wp-${moduleName}`)
+              return {
+                contents: `
                 const wpModule = window.wp.${moduleName};
                 for (const key in wpModule) {
                   if (Object.prototype.hasOwnProperty.call(wpModule, key)) {
@@ -75,28 +73,27 @@ export async function sideload(
                   }
                 }
               `,
-                  loader: 'js',
-                }
-              },
-            )
+                loader: 'js',
+              }
+            })
           },
         },
       ],
     })
 
     const bundledDependencies = Object.keys(result.metafile.inputs).filter(
-      (dep) => {
+      dep => {
         if (dep === `src/${script}`) return false
         if (/:/.test(dep)) return false
         else return true
       },
     )
 
-    bundledDependencies.forEach((dep) => {
+    bundledDependencies.forEach(dep => {
       this.addWatchFile(`./${dep}`)
     })
 
-    result.outputFiles.forEach((file) => {
+    result.outputFiles.forEach(file => {
       const hash = generateFileHash(file.text)
       const filename = extractFilenameWithoutExtension(script)
 

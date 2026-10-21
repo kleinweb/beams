@@ -2,7 +2,7 @@
 // SPDX-FileCopyrightText: 2023-2025 Evo Mark Ltd.
 // SPDX-License-Identifier: GPL-3.0-or-later OR MIT
 
-import type { NullValue, OutputOptions } from 'rollup'
+import type {NullValue, OutputOptions} from 'rollup'
 
 const ns = '@wordpress/'
 const nsExclude = ['icons', 'interface']

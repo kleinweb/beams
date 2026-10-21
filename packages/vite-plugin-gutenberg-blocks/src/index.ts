@@ -2,20 +2,20 @@
 // SPDX-FileCopyrightText: 2023-2025 Evo Mark Ltd.
 // SPDX-License-Identifier: GPL-3.0-or-later OR MIT
 
-import { readFileSync } from 'node:fs'
-import { basename, join, normalize, resolve } from 'node:path'
-import type { BlockJson } from '@kleinweb/gutenberg-types'
+import {readFileSync} from 'node:fs'
+import {basename, join, normalize, resolve} from 'node:path'
+import type {BlockJson} from '@kleinweb/gutenberg-types'
 import react from '@vitejs/plugin-react'
-import type { OutputBundle } from 'rollup'
-import type { ResolvedConfig, Plugin as VitePlugin } from 'vite'
-import { viteStaticCopy } from 'vite-plugin-static-copy'
+import type {OutputBundle} from 'rollup'
+import type {ResolvedConfig, Plugin as VitePlugin} from 'vite'
+import {viteStaticCopy} from 'vite-plugin-static-copy'
 
-import { sideload } from './buildStart.ts'
-import { generateBundle } from './generateBundle.ts'
-import { options } from './options.ts'
-import { outputOptions } from './outputOptions.ts'
-import { packageRoot } from './package.ts'
-import { transform } from './transform.ts'
+import {sideload} from './buildStart.ts'
+import {generateBundle} from './generateBundle.ts'
+import {options} from './options.ts'
+import {outputOptions} from './outputOptions.ts'
+import {packageRoot} from './package.ts'
+import {transform} from './transform.ts'
 
 export interface PluginConfig {
   watch?: string[]
@@ -74,7 +74,7 @@ export const createViteBlock = (
       },
 
       async buildStart(_options) {
-        watch.forEach((file) => {
+        watch.forEach(file => {
           this.addWatchFile(file)
         })
         await sideload.call(this, blockJson, outputDirectory)

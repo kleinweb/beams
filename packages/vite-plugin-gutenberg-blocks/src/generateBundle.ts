@@ -2,8 +2,8 @@
 // SPDX-FileCopyrightText: 2023-2025 Evo Mark Ltd.
 // SPDX-License-Identifier: GPL-3.0-or-later OR MIT
 
-import type { OutputAsset, OutputBundle, OutputChunk } from 'rollup'
-import { generateFileHash, generatePhpAssetFile } from './utils.ts'
+import type {OutputAsset, OutputBundle, OutputChunk} from 'rollup'
+import {generateFileHash, generatePhpAssetFile} from './utils.ts'
 
 export function isOutputChunk(
   bundle: OutputAsset | OutputChunk,
@@ -29,7 +29,7 @@ export function generateBundle(
   const imports = Object.values(bundle).reduce((acc, file) => {
     if (!isOutputChunk(file)) return acc
     hash = generateFileHash(file.code)
-    file.imports.forEach((i) => {
+    file.imports.forEach(i => {
       i = i.replace(/^@wordpress\//, 'wp-')
       acc.add(i)
     }, acc)

@@ -2,11 +2,11 @@
 // SPDX-FileCopyrightText: 2023-2025 Evo Mark Ltd.
 // SPDX-License-Identifier: GPL-3.0-or-later OR MIT
 
-import { sep } from 'node:path'
-import type { BlockJson } from '@kleinweb/gutenberg-types'
-import type { EmittedAsset, PluginContext } from 'rollup'
-import type { ResolvedConfig } from 'vite'
-import { preprocessCSS } from 'vite'
+import {sep} from 'node:path'
+import type {BlockJson} from '@kleinweb/gutenberg-types'
+import type {EmittedAsset, PluginContext} from 'rollup'
+import type {ResolvedConfig} from 'vite'
+import {preprocessCSS} from 'vite'
 
 function trimSlashes(filename: string): string {
   return filename.replace(/^[/\\]+|[/\\]+$/g, '')
@@ -52,8 +52,8 @@ export async function transform(
   const stylesheets = (
     [...style, ...editorStyle, ...viewStyle].flat(Infinity) as string[]
   )
-    .filter((s) => !!s)
-    .map((s) => trimSlashes(s.replace('file:.', '')))
+    .filter(s => !!s)
+    .map(s => trimSlashes(s.replace('file:.', '')))
 
   if (stylesheets.includes(outputPath) === false) {
     return result.code
