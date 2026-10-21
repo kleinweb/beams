@@ -3,6 +3,7 @@
 
 [global]
 excludes = [
+  "**/dist/**",
   "**/node_modules/**",
   "**/vendor/**",
   "**/*.min.*",
