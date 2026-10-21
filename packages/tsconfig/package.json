@@ -6,8 +6,8 @@
     "access": "public"
   },
   "devDependencies": {
-    "@tsconfig/node-lts": "^22.0.2",
-    "@tsconfig/node-ts": "^23.6.1",
-    "@tsconfig/strictest": "^2.0.6"
+    "@tsconfig/node-lts": "^22 || ^24",
+    "@tsconfig/node-ts": "^23.6.4",
+    "@tsconfig/strictest": "^2.0.8"
   }
 }
